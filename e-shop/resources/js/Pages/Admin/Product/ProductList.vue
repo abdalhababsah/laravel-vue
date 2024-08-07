@@ -25,15 +25,15 @@ const dialogImageUrl = ref('');
 // handle images upload
 // handle images upload
 const fileList = ref([])
-const handleFileChange = (file) =>{
+const handleFileChange = (file) => {
     productImages.value.push(file);
 }
-const handleRemove= (file) => {
-  console.log(file)
+const handleRemove = (file) => {
+    console.log(file)
 }
-const handlePictureCardPreview= (file) => {
-  dialogImageUrl.value = file.url
-  dialogVisible.value = true
+const handlePictureCardPreview = (file) => {
+    dialogImageUrl.value = file.url
+    dialogVisible.value = true
 }
 
 // handle images upload
@@ -184,10 +184,9 @@ const handleClose = () => {
                 </div>
                 <!-- multi image upload -->
                 <div class="relative z-0 w-full mb-5 group">
-                    <label for=""
-                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product Images</label>
-                    <el-upload v-model:file-list="productImages"
-                        list-type="picture-card" multiple
+                    <label for="" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product
+                        Images</label>
+                    <el-upload v-model:file-list="productImages" list-type="picture-card" multiple
                         :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :on-change="handleFileChange">
                         <el-icon>
                             <Plus />
@@ -318,6 +317,9 @@ const handleClose = () => {
                     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
+                                <!-- <th scope="col" class="px-4 py-3">
+                                    Product Images
+                                </th> -->
                                 <th scope="col" class="px-4 py-3">
                                     Product name
                                 </th>
@@ -339,6 +341,18 @@ const handleClose = () => {
                                     class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     {{ product.title }}
                                 </th>
+                                <!-- <td v-if="product.product_images[0]" scope="row"
+                                    class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    <a  :href="product.product_images[0].image" target="_blank">
+                                        <img :src="product.product_images[0].image" alt="Product Image"
+                                            class="w-24 h-24 object-cover" />
+                                    </a>
+                                </td>
+                                <td v-else>
+                                No Images available
+
+                                </td> -->
+
                                 <td class="px-4 py-3">
                                     {{
                                     product.category &&
@@ -362,19 +376,16 @@ const handleClose = () => {
                                     }}
                                 </td>
                                 <td class="px-4 py-3">
-                                    {{
-                                    product.in_stock !== undefined
-                                    ? product.in_stock
-                                    : "No stock info"
-                                    }}
+                                    <span :class="product.in_stock === 0 ? 'bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300' : 'bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300'">
+                                        {{ product.in_stock === 0 ? 'Available' : 'Unavailable' }}
+                                    </span>
                                 </td>
                                 <td class="px-4 py-3">
-                                    {{
-                                    product.published !== undefined
-                                    ? product.published
-                                    : "Not published"
-                                    }}
+                                    <span :class="product.published === 0 ? 'bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300' : 'bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300'">
+                                        {{ product.published === 0 ? 'Published' : 'Unpublished' }}
+                                    </span>
                                 </td>
+
                                 <td class="px-4 py-3">
                                     JOD
                                     {{
@@ -384,8 +395,7 @@ const handleClose = () => {
                                     }}
                                 </td>
                                 <td class="px-4 py-3 flex items-center justify-end">
-                                    <button :id="'dropdown-button-' + product.id" :data-dropdown-toggle="
-                                            'dropdown-' + product.id
+                                    <button :id="'dropdown-button-' + product.id" :data-dropdown-toggle="'dropdown-' + product.id
                                         "
                                         class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
                                         type="button">

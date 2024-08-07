@@ -19,7 +19,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with('category', 'brand', 'product_images')->get();
+        $products = Product::with(['category', 'brand', 'product_images'])->get();
         $brands = Brand::get();
         $categories = Category::get();
 
@@ -51,7 +51,7 @@ class ProductController extends Controller
         // dd($validated);  // Debugging line
 
         $validated['published'] = $validated['published'] ?? 0;
-        $inStock = $validated['quantity'] > 0 ? 1 : 0;
+        $inStock = $validated['quantity'] > 0 ? 0 : 1;
 
         $product = Product::create([
             'title' => $validated['title'],
@@ -67,8 +67,8 @@ class ProductController extends Controller
         ]);
 
         // Handle images
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
+        if ($request->hasFile('product_images')) {
+            foreach ($request->file('product_images') as $image) {
                 // Generate a unique name with timestamp
                 $timestamp = now()->format('YmdHis');
                 $imageName = $timestamp . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
