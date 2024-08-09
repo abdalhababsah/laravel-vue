@@ -27,6 +27,16 @@ class Product extends Model
         'category_id',
     ];
 
+    public function wishlistItems()
+    {
+        return $this->hasMany(WishlistItem::class);
+    }
+
+    public function colors()
+    {
+        return $this->belongsToMany(Color::class, 'product_colors');
+    }
+
     public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()

@@ -78,4 +78,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Product::class, 'deleted_by');
     }
+    public function wishlists()
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+
 }

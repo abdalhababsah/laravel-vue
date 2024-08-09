@@ -23,6 +23,7 @@ return new class extends Migration
             $table->boolean('published')->default(0);
             $table->boolean('in_stock')->default(0);
             $table->decimal('price', 10, 2);
+            $table->enum('product_type', ['new', 'featured', 'normal'])->default('normal');
             $table->foreignIdFor(User::class, 'created_by')->nullable()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignIdFor(User::class, 'updated_by')->nullable()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignIdFor(User::class, 'deleted_by')->nullable()->cascadeOnDelete()->cascadeOnUpdate();

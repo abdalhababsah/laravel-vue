@@ -5,11 +5,14 @@ import { router, usePage } from "@inertiajs/vue3";
 import Swal from "sweetalert2";
 import { ref } from "vue";
 import { descriptionProps } from "element-plus";
-import { Plus, Delete } from '@element-plus/icons-vue';
+import { Plus, Delete, CloseBold } from '@element-plus/icons-vue';
 onMounted(() => {
     initFlowbite();
 });
-const products = usePage().props.products;
+defineProps({
+    products:Array
+})
+
 const categories = usePage().props.categories;
 const brands = usePage().props.brands;
 const editMode = ref(false);
@@ -55,7 +58,6 @@ const resetFormData = () => {
     in_stock.value = '';
     dialogImageUrl.value = '';
 };
-// add product
 const AddProduct = async () => {
     // console.log(description.value);
     const formData = new FormData();
@@ -78,6 +80,7 @@ const AddProduct = async () => {
                     position: "top-end",
                     icon: "success",
                     showConfirmButton: false,
+                    timer: 1500,
                 });
                 dialogVisible.value = false;
                 resetFormData();
@@ -89,30 +92,44 @@ const AddProduct = async () => {
             text: "There was an error creating the product:" + errorMessage,
             icon: "error",
             confirmButtonText: "OK",
+            timer: 1500,
         });
     }
 };
 const deleteProduct = async (id) => {
-
     try {
-        await router.delete(`/admin/products/delete/${id}`, {
-            onSuccess: (page) => {
-                Swal.fire({
-                    toast: true,
-                    title: page.props.flash.success,
-                    position: "top-end",
-                    icon: "success",
-                    showConfirmButton: false,
-                });
-            }
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: "This action cannot be undone!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel',
         });
+        if (result.isConfirmed) {
+            await router.delete(`/admin/products/delete/${id}`, {
+                onSuccess: (page) => {
+                    Swal.fire({
+                        toast: true,
+                        title: page.props.flash.success,
+                        position: "top-end",
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1500,
+                    });
+                }
+            });
+        }
     } catch (error) {
         Swal.fire({
-                    toast: true,
-                    title: page.props.flash.error,
-                    position: "top-end",
-                    icon: "error",
-                    showConfirmButton: false,
+            toast: true,
+            title:  page.props.flash.error,
+            position: "top-end",
+            icon: "error",
+            showConfirmButton: false,
+            timer: 1500,
         });
     }
 };
@@ -141,7 +158,6 @@ const handleClose = () => {
     isAddProduct.value = false;
     dialogVisible.value = false;
 };
-// delete single product image
 const deleteImage = async (product_image, index) => {
     try {
         await router.delete(`/admin/products/image/${product_image.id}`, {
@@ -153,6 +169,7 @@ const deleteImage = async (product_image, index) => {
                     position: "top-end",
                     icon: "success",
                     showConfirmButton: false,
+                    timer: 1500,
                 });
             }
         });
@@ -184,6 +201,7 @@ const updateProduct = async () => {
                     position: "top-end",
                     icon: "success",
                     showConfirmButton: false,
+                    timer: 1500,
                 });
             }
         })
@@ -196,99 +214,97 @@ const updateProduct = async () => {
 <template>
     <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5">
         <!-- add product diaglog -->
-        <el-dialog v-model="dialogVisible" :title="editMode ? 'Edit Product' : 'Add Product'" width="50%"
-            :before-close="handleClose">
-            <!-- add product form -->
+        <el-dialog v-model="dialogVisible" :title="editMode ? 'Edit Product' : 'Add Product'" width="50%" :before-close="handleClose">
+    <!-- add product form -->
+    <form class="px-6 py-4" @submit.prevent="editMode ? updateProduct() : AddProduct()">
+        <!-- Product Title -->
+        <div class="relative z-0 w-full mb-4">
+            <label for="floating_title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Title</label>
+            <input type="text" v-model="title" name="floating_title" id="floating_title"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                placeholder="Type product name" required>
+        </div>
 
-            <form class="max-w px-3 mx-auto" @submit.prevent=" editMode? updateProduct(): AddProduct()">
-                <div class="relative z-0 w-full mb-5 group">
-                    <input v-model="title" type="text" name="floating_title" id="floating_title"
-                        class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                        placeholder=" " required />
-                    <label for="floating_title"
-                        class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Product
-                        Title</label>
-                </div>
-                <div class="relative z-0 w-full mb-5 group">
-                    <input v-model="price" type="number" name="floating_price" id="floating_price"
-                        class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                        placeholder=" " required />
-                    <label for="floating_price"
-                        class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Price</label>
-                </div>
-                <div class="relative z-0 w-full mb-5 group">
-                    <input type="number" v-model="quantity" name="qty" id="floating_qty"
-                        class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                        placeholder=" " required />
-                    <label for="floating_qty"
-                        class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Quantity</label>
-                </div>
+        <!-- Quantity and Price -->
+        <div class="flex gap-4 mb-4">
+            <div class="flex-1">
+                <label for="qty" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Quantity</label>
+                <input v-model="quantity" required type="number" name="qty" id="qty"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    placeholder="Quantity">
+            </div>
+            <div class="flex-1">
+                <label for="floating_price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Price</label>
+                <input v-model="price" required type="number" name="floating_price" id="floating_price"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    placeholder="JOD">
+            </div>
+        </div>
 
-                <!-- category select option -->
-                <div class="relative z-0 w-full mb-5 group">
-                    <label for="category_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select
-                        Category</label>
-                    <select v-model="category_id" id="category_id"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <option selected>Choose a category</option>
-                        <option v-for="category in categories" :key="category_id" :value="category.id">
-                            {{ category.name }}
-                        </option>
-                    </select>
-                </div>
+        <!-- Brand and Category -->
+        <div class="flex gap-4 mb-4">
+            <div class="flex-1">
+                <label for="brand_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Brand</label>
+                <select v-model="brand_id" id="brand_id"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <option selected>Choose a brand</option>
+                    <option v-for="brand in brands" :key="brand.id" :value="brand.id">
+                        {{ brand.name }}
+                    </option>
+                </select>
+            </div>
+            <div class="flex-1">
+                <label for="category_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Category</label>
+                <select v-model="category_id" id="category_id"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <option selected>Choose a category</option>
+                    <option v-for="category in categories" :key="category.id" :value="category.id">
+                        {{ category.name }}
+                    </option>
+                </select>
+            </div>
+        </div>
 
-                <!-- end category select option -->
-                <!-- start brand select option -->
-                <div class="relative z-0 w-full mb-5 group">
-                    <label for="brand_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select
-                        Brand</label>
-                    <select v-model="brand_id" id="brand_id"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <option selected>Choose a brand</option>
-                        <option v-for="brand in brands" :key="brand_id" :value="brand.id">
-                            {{ brand.name }}
-                        </option>
-                    </select>
-                </div>
-                <div class="relative z-0 w-full mb-5 group">
-                    <label for="description"
-                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product Description</label>
-                    <textarea v-model="description" id="description" rows="4"
-                        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Describe your product here..."></textarea>
-                </div>
-                <!-- multi image upload -->
-                <div class="relative z-0 w-full mb-5 group">
-                    <label for="" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product
-                        Images</label>
-                    <el-upload v-model:file-list="productImages" list-type="picture-card" multiple
-                        :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :on-change="handleFileChange">
-                        <el-icon>
-                            <Plus />
-                        </el-icon>
-                    </el-upload>
-                </div>
+        <!-- Product Description -->
+        <div class="relative z-0 w-full mb-4">
+            <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product Description</label>
+            <textarea v-model="description" id="description" rows="4"
+                class="block w-full p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Describe your product here..."></textarea>
+        </div>
 
-                <!-- Start -->
-                <div class="flex flex-wrap mb-8 gap-3">
-                    <div v-for="(product_image, index) in product_images" :key="product_image.id" class="relative">
-                        <img class="w-24 h-24 rounded" :src="`http://127.0.0.1:8000/storage/${product_image.image}`"
-                            alt="">
-                        <span @click="deleteImage(product_image, index)"
-                            class="absolute top-0 p-1 right-0 transform translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-red-400 border-2 border-white dark:border-gray-800 rounded-full flex items-center justify-center cursor-pointer">
-                            <Delete />
-                        </span>
-                    </div>
-                </div>
+        <!-- Product Images -->
+        <div class="relative z-0 w-full mb-4">
+            <label for="" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product Images</label>
+            <el-upload v-model:file-list="productImages" list-type="picture-card" multiple
+                :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :on-change="handleFileChange">
+                <el-icon>
+                    <Plus />
+                </el-icon>
+            </el-upload>
+        </div>
 
-                <!-- End -->
+        <!-- Existing Product Images -->
+        <div class="flex justify-center flex-wrap mb-4 gap-3">
+            <div v-for="(product_image, index) in product_images" :key="product_image.id" class="relative">
+                <img class="w-32 h-32 rounded" :src="`http://127.0.0.1:8000/storage/${product_image.image}`" alt="">
+                <span @click="deleteImage(product_image, index)"
+                    class="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-red-600 border-2 border-white dark:border-gray-800 rounded-full flex items-center justify-center cursor-pointer">
+                    <CloseBold />
+                </span>
+            </div>
+        </div>
 
-                <button type="submit"
-                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                    Submit
-                </button>
-            </form>
-        </el-dialog>
+        <!-- Submit Button -->
+        <div class="flex justify-end mt-6">
+            <button type="submit"
+                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5">
+                Submit
+            </button>
+        </div>
+    </form>
+</el-dialog>
+
         <!-- end add product diaglog -->
         <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
             <!-- Start coding here -->
@@ -414,24 +430,24 @@ const updateProduct = async () => {
                                 </th>
                                 <td class="px-4 py-3">
                                     {{
-                                        product.category &&
-                                            product.category.name
-                                            ? product.category.name
-                                            : "No category"
+                                    product.category &&
+                                    product.category.name
+                                    ? product.category.name
+                                    : "No category"
                                     }}
                                 </td>
                                 <td class="px-4 py-3">
                                     {{
-                                        product.brand && product.brand.name
-                                            ? product.brand.name
-                                            : "No brand"
+                                    product.brand && product.brand.name
+                                    ? product.brand.name
+                                    : "No brand"
                                     }}
                                 </td>
                                 <td class="px-4 py-3">
                                     {{
-                                        product.quantity !== undefined
-                                            ? product.quantity
-                                            : "No quantity"
+                                    product.quantity !== undefined
+                                    ? product.quantity
+                                    : "No quantity"
                                     }}
                                 </td>
                                 <td class="px-4 py-3">
@@ -450,9 +466,9 @@ const updateProduct = async () => {
                                 <td class="px-4 py-3">
                                     JOD
                                     {{
-                                        product.price !== undefined
-                                            ? product.price
-                                            : "No price"
+                                    product.price !== undefined
+                                    ? product.price
+                                    : "No price"
                                     }}
                                 </td>
                                 <td class="px-4 py-3 flex items-center justify-end">
@@ -467,7 +483,7 @@ const updateProduct = async () => {
                                         </svg>
                                     </button>
                                     <div :id="'edit-product-dropdown-' + product.id"
-                                        class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
+                                        class="hidden z-10 w-24 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
                                         <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
                                             :aria-labelledby="'edit-product-dropdown-button-' + product.id">
                                             <li>
@@ -481,7 +497,7 @@ const updateProduct = async () => {
                                         </ul>
                                         <div class="py-1">
                                             <button @click="deleteProduct(product.id)"
-                                                    class="block py-2 px-4 text-left w-full hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Delete</button>
+                                                class="block py-2 px-4 text-left w-full text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Delete</button>
                                         </div>
                                     </div>
                                 </td>

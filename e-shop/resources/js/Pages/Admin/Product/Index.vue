@@ -1,12 +1,14 @@
 <script setup>
-import { Link } from "@inertiajs/vue3";
 import AdminLayout from "../Components/AdminLayout.vue";
 import ProductList from "./ProductList.vue";
+defineProps({
+    products: Array,
+})
 </script>
 <template>
     <AdminLayout>
 
-   <ProductList/>
+        <ProductList :products="products" />
 
     </AdminLayout>
 </template>

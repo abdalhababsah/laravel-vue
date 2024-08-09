@@ -13,8 +13,5 @@ class ProductsTableSeeder extends Seeder
      */
     public function run(): void
     {
-        Product::insert([
-            ['title' => 'Product A', 'slug' => 'product-a', 'quantity' => 10, 'price' => 99.99],
-            ['title' => 'Product B', 'slug' => 'product-b', 'quantity' => 20, 'price' => 199.99],
-        ]);    }
+        Product::factory()->count(30)->create();}
 }
