@@ -63,7 +63,7 @@ class ProductController extends Controller
             'brand_id' => $validated['brand_id'],
             'category_id' => $validated['category_id'],
             'created_by' => Auth::id(),
-            'slug' => $validated['title'], // Assuming slug is the same as title for now
+            // 'slug' => $validated['title'], // Assuming slug is the same as title for now
         ]);
 
         // Handle images
@@ -83,7 +83,7 @@ class ProductController extends Controller
             }
         }
 
-        return redirect()->route('admin.products.index')->with('success', 'Product created successfully.');
+        return redirect()->back()->with('success', 'Product created successfully.');
     }
 
 
@@ -108,46 +108,58 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(ProductUpdateRequest $request, Product $product)
+    public function update(ProductUpdateRequest $request, $id)
     {
-        // Validate the request
-        $validated = $request->validated();
-
-        // Update the product
+        $product = Product::findOrFail($id);
+        $validated = $request->all();
+        // dd($validated);
+        $validated['published'] = $validated['published'] ?? 0;
+        $inStock = $validated['quantity'] > 0 ? 0 : 1;
         $product->update([
             'title' => $validated['title'],
             'description' => $validated['description'],
-            'published' => $validated['published']? $validated['published'] :1,
-            'in_stock' => $validated['in_stock'] ? $validated['in_stock'] : 0,
+            'published' => $validated['published'],
+            'in_stock' => $inStock,
             'price' => $validated['price'],
+            'quantity' => $validated['quantity'],
             'brand_id' => $validated['brand_id'],
             'category_id' => $validated['category_id'],
+            'updated_by' => Auth::id(),
         ]);
-
-
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                // Generate a unique name with timestamp
+        if ($request->hasFile('product_images')) {
+            foreach ($request->file('product_images') as $image) {
                 $timestamp = now()->format('YmdHis');
                 $imageName = $timestamp . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-
-                // Store the image with the unique name
-                $imagePath = $image->storeAs('product_images/', $imageName, 'public');
+                $path = $image->storeAs('product_images/', $imageName, 'public');
                 ProductImage::updateOrCreate(
-                    ['product_id' => $product->id, 'image' => $imagePath]
+                    [
+                        'product_id' => $product->id,
+                        'image' => $path,
+                    ],
+                    [
+                        'image' => $path,
+                    ]
                 );
             }
         }
 
-        // Redirect or respond as needed
-        return redirect()->route('products.index')->with('success', 'Product updated successfully');
+        return redirect()->route('admin.products.index')->with('success', 'Product updated successfully.');
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        //
+        $product = Product::findOrFail($id);
+        $product->delete();
+        return redirect()->back()->with('success', 'Product deleted successfully.');
+    }
+
+    public function deleteImage($id)
+    {
+        ProductImage::where('id', $id)->delete();
+        return redirect()->route('admin.products.index')->with('success', 'Image deleted successfully');
     }
 }
