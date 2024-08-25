@@ -1,108 +1,197 @@
 <script setup>
 import { Link, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue'
+import { computed, ref } from 'vue';
+import { User, Menu } from '@element-plus/icons-vue';
+
 const canLogin = usePage().props.canLogin;
 const canRegister = usePage().props.canRegister;
 const auth = usePage().props.auth;
 const cart = computed(() => usePage().props.cart);
-import { User, ShoppingCart, ShoppingCartFull } from '@element-plus/icons-vue';
+const isMenuOpen = ref(false);
 </script>
 
 <template>
-    <nav class="bg-white border-gray-200 dark:bg-gray-900">
+    <nav
+        :class="{ 'bg-white w-full': isMenuOpen, 'dark:bg-gray-800': !isMenuOpen, 'border-gray-200': true, 'z-50': true, 'relative': true }">
         <div class="max-w-screen-xl mx-auto flex items-center justify-between p-4">
-            <a href="" class="flex items-center space-x-3 rtl:space-x-reverse">
-                <img src="https://flowbite.com/docs/images/logo.svg" class="h-8" alt="Flowbite Logo" />
+            <!-- Logo and site name -->
+            <a href="#" class="hidden md:flex items-center space-x-3 rtl:space-x-reverse">
                 <span
-                    class="self-center text-2xl font-semibold text-yellow-900 whitespace-nowrap dark:text-white ">Shantaty.<span
-                        class="">net</span></span>
+                    class="px-4 py-2 rounded-md self-center text-3xl font-semibold text-[#7d836d] whitespace-nowrap dark:text-white hover:-translate-y-1 transform transition duration-200 hover:shadow-md">
+                    Shantaty.<span>net</span>
+                </span>
             </a>
-            <div class="flex-1 flex items-center justify-center">
-                <ul class="flex space-x-8 rtl:space-x-reverse font-medium">
+
+            <!-- Mobile menu button -->
+            <button @click="isMenuOpen = !isMenuOpen" class="md:hidden text-gray-900 dark:text-white focus:outline-none">
+                <Menu class="h-8 w-8 text-[#7d836d]" />
+            </button>
+
+            <!-- Mobile Navigation Links -->
+            <div :class="{ 'block': isMenuOpen, 'hidden': !isMenuOpen }"
+                class="fixed inset-0 top-16 md:hidden bg-white dark:bg-gray-800 z-40">
+                <ul class="flex flex-col space-y-4 p-4">
                     <li>
                         <a href="#"
-                            class="text-yellow-900 dark:text-white hover:text-blue-700 dark:hover:text-blue-500">Home</a>
+                            class="block px-3 py-2 rounded-md font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Home</a>
                     </li>
                     <li>
                         <a href="#"
-                            class="text-yellow-900 dark:text-white hover:text-blue-700 dark:hover:text-blue-500">About</a>
+                            class="block px-3 py-2 rounded-md font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">About</a>
                     </li>
                     <li>
                         <a href="#"
-                            class="text-yellow-900 dark:text-white hover:text-blue-700 dark:hover:text-blue-500">Contact</a>
+                            class="block px-3 py-2 rounded-md font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Contact</a>
+                    </li>
+                    <li v-if="canLogin">
+                        <Link :href="route('products.index')"
+                            class="block px-3 py-2 rounded-md font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
+                        Shop</Link>
+                    </li>
+                    <li v-if="canLogin">
+                        <Link :href="route('cart.view')"
+                            class="relative block px-3 py-2 rounded-md font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <div
+                            class="absolute top-3 right-0 left-9 inline-flex items-center justify-center w-5 h-5 text-xs text-white bg-red-500 border-2 border-white rounded-full transform translate-x-2 -translate-y-2 dark:border-gray-900">
+                            {{ cart.data.count }}
+                        </div>
+                        <p>Cart</p>
+                        </Link>
+                    </li>
+                    <!-- User Menu or Login/Register Links -->
+                    <li v-if="auth.user" class="relative">
+                        <button type="button"
+                            class="flex text-sm hover:bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                            id="user-menu-button" aria-expanded="false">
+                            <span class="sr-only">Open user menu</span>
+                            <span class="w-8 h-8 p-1 text-gray hover:text-white border-2 border-white rounded-full">
+                                <User />
+                            </span>
+                        </button>
+                        <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
+                            id="user-dropdown">
+                            <div class="px-4 py-3">
+                                <span class="block text-sm text-gray-900 dark:text-white">{{ auth.user.name }}</span>
+                                <span class="block text-sm text-gray-500 truncate dark:text-gray-400">{{ auth.user.email }}</span>
+                            </div>
+                            <ul class="py-2" aria-labelledby="user-menu-button">
+                                <li>
+                                    <a href="#"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Dashboard</a>
+                                </li>
+                                <li>
+                                    <a href="#"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Settings</a>
+                                </li>
+                                <li>
+                                    <a href="#"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Earnings</a>
+                                </li>
+                                <li>
+                                    <a href="#"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li v-else class="flex  gap-2">
+                        <Link :href="route('login')" type="button"
+                            class="px-6 py-3 mb-4 md:bg-[#b0956e] md:text-white bg-white text-[#06402b] transition duration-300 hover:bg-[#937c5b] hover:text-white">
+                        Login
+                        </Link>
+                        <Link v-if="canRegister" :href="route('register')" type="button"
+                            class="px-6 py-3 mb-4 md:bg-[#7d836d] md:text-white mr-3 bg-white text-[#06402b] transition duration-300 hover:bg-[#937c5b] hover:text-white">
+                        Register
+                        </Link>
                     </li>
                 </ul>
             </div>
-            <div v-if="canLogin" class="flex items-center space-x-3 rtl:space-x-reverse">
-                <Link :href="route('products.index')"
-                    class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-500 to-pink-500 group-hover:from-purple-500 group-hover:to-pink-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800">
-                    <span
-                        class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-                        Go To Shop
-                    </span>
-                </Link>
-                <Link :href="route('cart.view')"
-                    class="relative inline-flex items-center p-1 text-sm font-medium text-center text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 rounded ">
-                <svg class="w-7 h-7 p-1" xmlns="http://www.w3.org/2000/svg" xml:space="preserve"
-                    viewBox="0 0 1024 1024">
-                    <path fill="currentColor"
-                        d="M887.01 264.99c-6-5.99-13.67-8.99-23.01-8.99H704c-1.34-54.68-20.01-100.01-56-136s-81.32-54.66-136-56c-54.68 1.34-100.01 20.01-136 56s-54.66 81.32-56 136H160c-9.35 0-17.02 3-23.01 8.99-5.99 6-8.99 13.67-8.99 23.01v640c0 9.35 2.99 17.02 8.99 23.01S150.66 960 160 960h704c9.35 0 17.02-2.99 23.01-8.99S896 937.34 896 928V288c0-9.35-2.99-17.02-8.99-23.01M421.5 165.5c24.32-24.34 54.49-36.84 90.5-37.5 35.99.68 66.16 13.18 90.5 37.5s36.84 54.49 37.5 90.5H384c.68-35.99 13.18-66.16 37.5-90.5M832 896H192V320h128v128h64V320h256v128h64V320h128z">
-                    </path>
-                </svg>
-                <span class="sr-only">Cart</span>
-                <div
-                    class="absolute inline-flex items-center justify-center w-5 h-5 text-xs  text-white bg-red-500 border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900">
-                    {{ cart.data.count }}</div>
-                </Link>
 
-                <button v-if="auth.user" type="button"
-                    class="flex text-sm hover:bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-                    id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
-                    data-dropdown-placement="bottom">
-                    <span class="sr-only">Open user menu</span>
-                    <span class="w-8 h-8 p-1 text-gray hover:text-white border-2 rounded-full" alt="user photo">
-                        <User />
-                    </span>
-                </button>
-                <div v-else>
-                    <Link :href="route('login')" type="button"
-                        class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
-                    Login</Link>
-                    <Link v-if="canRegister" :href="route('register')" type="button"
-                        class="text-gray-900 bg-gradient-to-r from-red-200 via-red-300 to-yellow-200 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
-                    Register</Link>
+            <!-- Navigation Links for larger screens -->
+            <div class="hidden md:flex md:items-center md:space-x-8 rtl:space-x-reverse font-medium w-full md:w-auto">
+                <ul class="flex flex-col md:flex-row md:space-x-8 mt-4 md:mt-0">
+                    <li>
+                        <a href="#"
+                            class="block px-3 py-2 rounded-md font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Home</a>
+                    </li>
+                    <li>
+                        <a href="#"
+                            class="block px-3 py-2 rounded-md font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">About</a>
+                    </li>
+                    <li>
+                        <a href="#"
+                            class="block px-3 py-2 rounded-md font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Contact</a>
+                    </li>
+                    <li v-if="canLogin">
+                        <Link :href="route('products.index')"
+                            class="block px-3 py-2 rounded-md font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
+                        Shop</Link>
+                    </li>
+                    <li v-if="canLogin">
+                        <Link :href="route('cart.view')"
+                            class="relative block px-3 py-2 rounded-md font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <div
+                            class="absolute top-0 right-0 inline-flex items-center justify-center w-5 h-5 text-xs text-white bg-red-500 border-2 border-white rounded-full transform translate-x-2 -translate-y-2 dark:border-gray-900">
+                            {{ cart.data.count }}
+                        </div>
+                        <p>Cart</p>
+                        </Link>
+                    </li>
+                </ul>
+            </div>
 
-                </div>
-                <!-- Dropdown menu -->
-                <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
-                    id="user-dropdown">
-                    <div class="px-4 py-3">
-                        <span class="block text-sm text-gray-900 dark:text-white">Bonnie Green</span>
-                        <span class="block text-sm text-gray-500 truncate dark:text-gray-400">name@flowbite.com</span>
+            <!-- User and Cart Actions -->
+            <div v-if="canLogin" class="hidden md:flex items-center space-x-3 rtl:space-x-reverse">
+                <div v-if="auth.user" class="relative">
+                    <button type="button"
+                        class="flex text-sm hover:bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                        id="user-menu-button" aria-expanded="false">
+                        <span class="sr-only">Open user menu</span>
+                        <span class="w-8 h-8 p-1 text-gray hover:text-white border-2 border-white rounded-full">
+                            <User />
+                        </span>
+                    </button>
+                    <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
+                        id="user-dropdown">
+                        <div class="px-4 py-3">
+                            <span class="block text-sm text-gray-900 dark:text-white">{{ auth.user.name }}</span>
+                            <span class="block text-sm text-gray-500 truncate dark:text-gray-400">{{ auth.user.email }}</span>
+                        </div>
+                        <ul class="py-2" aria-labelledby="user-menu-button">
+                            <li>
+                                <a href="#"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Dashboard</a>
+                            </li>
+                            <li>
+                                <a href="#"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Settings</a>
+                            </li>
+                            <li>
+                                <a href="#"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Earnings</a>
+                            </li>
+                            <li>
+                                <a href="#"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
+                            </li>
+                        </ul>
                     </div>
-                    <ul class="py-2" aria-labelledby="user-menu-button">
-                        <li>
-                            <a href="#"
-                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Dashboard</a>
-                        </li>
-                        <li>
-                            <a href="#"
-                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Settings</a>
-                        </li>
-                        <li>
-                            <a href="#"
-                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Earnings</a>
-                        </li>
-                        <li>
-                            <a href="#"
-                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign
-                                out</a>
-                        </li>
-                    </ul>
-
-
+                </div>
+                <div v-else class="flex gap-2">
+                    <Link :href="route('login')" type="button"
+                        class="px-6 py-3 mb-4 md:bg-[#b0956e] md:text-white bg-white text-[#06402b] transition duration-300 hover:bg-[#937c5b] hover:text-white">
+                    Login
+                    </Link>
+                    <Link v-if="canRegister" :href="route('register')" type="button"
+                        class="px-6 py-3 mb-4 md:bg-[#7d836d] md:text-white mr-3 bg-white text-[#06402b] transition duration-300 hover:bg-[#937c5b] hover:text-white">
+                    Register
+                    </Link>
                 </div>
             </div>
         </div>
     </nav>
 </template>
+
+<style>
+/* Add custom styles here if needed */
+</style>

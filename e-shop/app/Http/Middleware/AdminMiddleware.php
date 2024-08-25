@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-
+use Illuminate\Support\Facades\Auth;
 class AdminMiddleware
 {
     /**
@@ -15,7 +15,7 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(auth()->check() && auth()->user()->isAdmin == 1){
+        if(Auth::check() && Auth::user()->isAdmin == 1){
             return $next($request);
         }
         return redirect()->route('home')->with('error','Access denied. You are not an admin');

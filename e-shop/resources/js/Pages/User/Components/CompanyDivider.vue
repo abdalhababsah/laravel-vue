@@ -1,59 +1,30 @@
 <template>
- <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <!-- Free Shipping & Return -->
-        <div class="relative mb-12 px-3 lg:mb-0">
-            <div class="mb-2 flex justify-center">
-                <span class="text-primary">
-                    <!-- SVG icon -->
-                </span>
-            </div>
-            <h5 class="mb-6 font-bold text-primary">FREE SHIPPING & RETURN</h5>
-            <h6 class="mb-0 font-normal dark:text-neutral-50">Free shipping on all orders over $99.</h6>
-            <div
-                class="absolute right-0 top-0 hidden h-full min-h-[0.5px] w-px self-stretch border-t-0 bg-gradient-to-tr from-transparent via-neutral-500 to-transparent opacity-25 dark:via-neutral-400 lg:block">
-            </div>
-        </div>
+    <!-- ====== Brands Section Start -->
+    <section id="brands_section" class=" md:mt-28 mt-12 bg-[#7d836d]">
+        <div class="px-20 py-3">
+            <div class="flex items-center justify-between gap-6 xl:gap-11 ">
+                <a href="/details.html">
+                    <img src="https://logos-world.net/wp-content/uploads/2023/09/Chanel-Logo.png" alt="graygrids"
+                        class="sm:w-14 w-10 md:w-28" />
 
-        <!-- Money Back Guarantee -->
-        <div class="relative mb-12 px-3 lg:mb-0">
-            <div class="mb-2 flex justify-center">
-                <span class="text-primary">
-                    <!-- SVG icon -->
-                </span>
-            </div>
-            <h5 class="mb-6 font-bold text-primary">MONEY BACK GUARANTEE</h5>
-            <h6 class="mb-0 font-normal dark:text-neutral-50">100% money back guarantee.</h6>
-            <div
-                class="absolute right-0 top-0 hidden h-full min-h-[0.5px] w-px self-stretch border-t-0 bg-gradient-to-tr from-transparent via-neutral-500 to-transparent opacity-25 dark:via-neutral-400 lg:block">
-            </div>
-        </div>
+                </a>
+                <a href="https://lineicons.com/">
+                    <img src="https://logos-world.net/wp-content/uploads/2023/09/Coach-Logo.png" alt="lineicons"
+                        class="sm:w-14 w-10 md:w-28" />
 
-        <!-- Online Support 24/7 -->
-        <div class="relative mb-12 px-3 lg:mb-0">
-            <div class="mb-2 flex justify-center">
-                <span class="text-primary">
-                    <!-- SVG icon -->
-                </span>
-            </div>
-            <h5 class="mb-6 font-bold text-primary">ONLINE SUPPORT 24/7</h5>
-            <h6 class="mb-0 font-normal dark:text-neutral-50">Lorem ipsum dolor sit amet.</h6>
-            <div
-                class="absolute right-0 top-0 hidden h-full min-h-[0.5px] w-px self-stretch border-t-0 bg-gradient-to-tr from-transparent via-neutral-500 to-transparent opacity-25 dark:via-neutral-400 lg:block">
-            </div>
-        </div>
+                </a>
+                <a href="https://ayroui.com/">
+                    <img src="https://n8i5q6b9.rocketcdn.me/wp-content/uploads/2022/08/ALLU_Logo_Black-e1660680879561-570x232-1.png"
+                        alt="ayroui" class="sm:w-14 w-10 md:w-28" />
 
-        <!-- Secure Payment -->
-        <div class="relative mb-12 px-3 lg:mb-0">
-            <div class="mb-2 flex justify-center">
-                <span class="text-primary">
-                    <!-- SVG icon -->
-                </span>
-            </div>
-            <h5 class="mb-6 font-bold text-primary">SECURE PAYMENT</h5>
-            <h6 class="mb-0 font-normal dark:text-neutral-50">Lorem ipsum dolor sit amet.</h6>
-            <div
-                class="absolute right-0 top-0 hidden h-full min-h-[0.5px] w-px self-stretch border-t-0 bg-gradient-to-tr from-transparent via-neutral-500 to-transparent opacity-25 dark:via-neutral-400 lg:block">
+                </a>
+                <a href="https://tailgrids.com/">
+                    <img src="https://lappella.com/wp-content/uploads/2022/09/lappellalogo.png" alt="tailgrids"
+                        class="sm:w-14 w-10 md:w-28" />
+
+                </a>
             </div>
         </div>
-    </div>
+    </section>
+
 </template>

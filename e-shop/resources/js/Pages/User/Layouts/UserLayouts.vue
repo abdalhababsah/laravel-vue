@@ -3,35 +3,23 @@ import { onMounted } from 'vue'
 import { initFlowbite } from 'flowbite'
 import Footer from './Footer.vue';
 import Header from './Header.vue';
-// Initialize components based on data attribute selectors
 onMounted(() => {
     initFlowbite();
 })
-
 </script>
 
 <template>
+  <!-- Container with margins and background color -->
+    <!-- Navbar -->
+    <Header />
 
-<!-- navbar -->
-<div class="mx-22 sm:mx-2">
-<!-- navbar -->
-<!-- header -->
-<Header/>
+    <!-- Hero Section -->
+    <!-- Content for hero section goes here -->
 
-<!-- header -->
-<!-- hero section -->
+    <!-- Product List -->
+    <slot />
 
-<!-- hero section -->
-
-
-<!-- product list  -->
-<slot/>
-<!-- product list  -->
-<!-- footer -->
-
-
-
-<Footer/>
-</div>
+    <!-- Footer -->
+    <Footer />
 
 </template>

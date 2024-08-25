@@ -9,7 +9,11 @@ const total = computed(() => usePage().props.cart.data.total);
 // console.log(products[0]);
 const itemId = (id) => carts.value.findIndex((item) => item.product_id === id);
 const update = (product, quantity) => {
-    router.patch(route('cart.update', product.id), { quantity })
+    router.patch(route('cart.update', product.id), { quantity }, {
+        preserveState : true,
+                replace       : true,
+                preserveScroll: true,
+    })
         .then(response => {
             console.log('Cart updated successfully', response);
         })
@@ -18,15 +22,19 @@ const update = (product, quantity) => {
         });
 };
 const remove = (product) => {
-    router.delete(route('cart.delete', product));
+    router.delete(route('cart.delete', product), {
+        preserveState : true,
+                replace       : true,
+                preserveScroll: true,
+    });
 
 }
 </script>
 <template>
     <UserLayouts>
-        <section class="bg-white py-8 antialiased dark:bg-gray-900 md:py-16">
+        <section class="bg-white  antialiased rounded-b-3xl dark:bg-gray-900 md:py-14 sm:py-8 lg:py-14">
             <div class="mx-auto max-w-screen-xl px-4 2xl:px-0">
-                <h2 class="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">Shopping Cart</h2>
+                <h2 class="text-base font-semibold text-gray-900 dark:text-white sm:text-xl">Shopping Cart</h2>
                 <div class="mt-6 sm:mt-8 md:gap-6 lg:flex lg:items-start xl:gap-8">
                     <div class="mx-auto w-full flex-none lg:max-w-2xl xl:max-w-4xl">
                         <div v-if="products.length === 0"
@@ -123,7 +131,7 @@ const remove = (product) => {
                             </div>
                         </div>
                         <div class="hidden xl:mt-8 xl:block">
-                            <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">People also bought</h3>
+                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white">People also bought</h3>
                             <div class="mt-6 grid grid-cols-3 gap-4 sm:mt-8">
                                 <div
                                     class="space-y-6 overflow-hidden rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">

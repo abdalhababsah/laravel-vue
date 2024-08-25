@@ -18,9 +18,14 @@ class UserController extends Controller
         ->where('product_type', 'new')
         ->limit(8)
         ->get();
+        $products = Product::with('brand', 'category', 'product_images')
+        ->latest()
+        ->limit(8)
+        ->get();
         return Inertia::render('User/Index',[
         'featured_products' => $featured_products,
         'new_products' => $new_products,
+        'products' => $products,
         'canLogin' => app('router')->has('login'),
         'canRegister' => app('router')->has('register'),
         'laravelVersion' => Application::VERSION,
