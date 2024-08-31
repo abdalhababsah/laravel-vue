@@ -19,15 +19,15 @@ class ProductImage extends Model
         return $this->belongsTo(Product::class);
     }
 
-    // public function getImageAttribute()
-    // {
-    //     $image = Arr::get($this->attributes, 'image');
-    //     if ($image) {
-    //         $imagePath = ltrim($image, '/');
-    //         return config('app.url') . '/storage/' . $imagePath;
-    //     }
-    //     return $image;
-    // }
+    public function getImageAttribute()
+    {
+        $image = Arr::get($this->attributes, 'image');
+        if ($image) {
+            $imagePath = ltrim($image, '/');
+            return 'http://127.0.0.1:8000' . '/storage/' . $imagePath;
+        }
+        return $image;
+    }
 
-
+    // config('app.url')
 }

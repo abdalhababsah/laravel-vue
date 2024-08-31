@@ -13,9 +13,6 @@ class OrderItemsTableSeeder extends Seeder
      */
     public function run(): void
     {
-        OrderItem::insert([
-            ['order_id' => 1, 'product_id' => 1, 'quantity' => 2, 'unit_price' => 99.99],
-            ['order_id' => 2, 'product_id' => 2, 'quantity' => 1, 'unit_price' => 199.99],
-        ]);
+        OrderItem::factory()->count(20)->create();
     }
 }

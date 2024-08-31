@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue';
 import UserLayouts from './Layouts/UserLayouts.vue';
-import { router, usePage } from "@inertiajs/vue3";
+import { Link, router, usePage } from "@inertiajs/vue3";
 const carts = computed(() => usePage().props.cart.data.items);
 const products = computed(() => usePage().props.cart.data.products);
 const total = computed(() => usePage().props.cart.data.total);
@@ -42,9 +42,10 @@ const remove = (product) => {
                             <p class="text-lg font-semibold text-gray-700 dark:text-gray-300">
                                 Your cart is empty.
                             </p>
-                            <a href="#" title=""
+                            <Link :href="route('products.index')" title=""
                                 class="inline-flex items-center gap-2 text-primary-700 hover:text-primary-900 underline dark:text-primary-500 dark:hover:text-primary-300">
                                 <span class="text-sm font-medium">Continue Shopping</span>
+
                                 <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
                                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                                     viewBox="0 0 24 24">
@@ -52,14 +53,14 @@ const remove = (product) => {
                                         stroke-width="2"
                                         d="M9 10V6a3 3 0 0 1 3-3v0a3 3 0 0 1 3 3v4m3-2 .917 11.923A1 1 0 0 1 17.92 21H6.08a1 1 0 0 1-.997-1.077L6 8h12Z" />
                                 </svg>
-                            </a>
+                            </Link>
                         </div>
                         <div v-else class="space-y-6">
                             <div v-for="product in products" :key="product.id"
                                 class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
                                 <div class="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
                                     <a :href="'/product/' + product.slug" class="shrink-0 md:order-1">
-                                        <img :src="product.product_images.length > 0 ? `http://127.0.0.1:8000/storage/${product.product_images[0].image}` : 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg'"
+                                        <img :src="product.product_images.length > 0 ? `${product.product_images[0].image}` : 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg'"
                                             :alt="product.title" class=" w-20 overflow-hidden" />
                                     </a>
                                     <label for="counter-input" class="sr-only">Choose quantity:</label>
@@ -227,7 +228,7 @@ const remove = (product) => {
 
                             <div class="flex items-center justify-center gap-2">
                                 <span class="text-sm font-normal text-gray-500 dark:text-gray-400"> or </span>
-                                <a href="#" title=""
+                                <Link :href="route('products.index')" title=""
                                     class="inline-flex items-center gap-2 text-sm font-medium text-primary-700 underline hover:no-underline dark:text-primary-500">
                                     Continue Shopping
                                     <svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
@@ -235,7 +236,7 @@ const remove = (product) => {
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                             stroke-width="2" d="M19 12H5m14 0-4 4m4-4-4-4" />
                                     </svg>
-                                </a>
+                                </Link>
                             </div>
                         </div>
                     </div>

@@ -2,14 +2,12 @@
 import UserLayouts from './Layouts/UserLayouts.vue';
 import { ref, watch } from 'vue';
 import { router, useForm } from '@inertiajs/vue3';
+// import ProductsPagination from './Components/ProductsPagination.vue'
 import {
     Menu,
     MenuButton,
     MenuItem,
     MenuItems,
-    Disclosure,
-    TransitionChild,
-    TransitionRoot,
 } from '@headlessui/vue';
 import DisclosureFilter from './Components/DisclosureFilter.vue';
 import ProductCards from './Components/ProductCards.vue';
@@ -112,10 +110,7 @@ defineProps({
                                 </transition>
                             </Menu>
 
-                            <button type="button" class="-m-2 ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7">
-                                <span class="sr-only">View grid</span>
-                                <Squares2X2Icon class="h-5 w-5" aria-hidden="true" />
-                            </button>
+
                             <button type="button"
                                 class="-m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 sm:ml-6 lg:hidden"
                                 @click="mobileFiltersOpen = true">
@@ -176,9 +171,10 @@ defineProps({
                             <!-- Product grid -->
                             <div class="lg:col-span-3">
                                 <!-- Your content -->
-                                <ProductCards :products="products.data" gridClass="lg:grid-cols-3" />
+                                <ProductCards :products="products" gridClass="lg:grid-cols-3" />
                             </div>
                         </div>
+                        <!-- <ProductsPagination/> -->
                     </section>
                 </main>
             </div>

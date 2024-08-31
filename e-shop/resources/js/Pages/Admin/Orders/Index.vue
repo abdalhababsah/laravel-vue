@@ -1,9 +1,13 @@
 <script setup>
 import AdminLayout from '../Components/AdminLayout.vue';
+import OrdersList from './OrdersList.vue';
+defineProps({
+    orders:Object,
+});
 </script>
 <template>
 <AdminLayout>
 
-    <h1>Brands</h1>
+   <OrdersList :orders = 'orders'/>
 </AdminLayout>
 </template>

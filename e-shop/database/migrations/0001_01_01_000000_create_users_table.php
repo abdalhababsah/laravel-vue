@@ -15,10 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('number')->unique();
             $table->timestamp('email_verified_at')->nullable();
+            $table->timestamp('number_verified_at')->nullable();
             $table->string('password');
             $table->boolean('isAdmin')->default(0); // 1 for admin | 0 for user
             $table->rememberToken();
+            $table->softDeletes();
             $table->timestamps();
         });
 

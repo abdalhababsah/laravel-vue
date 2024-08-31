@@ -8,6 +8,11 @@ const canRegister = usePage().props.canRegister;
 const auth = usePage().props.auth;
 const cart = computed(() => usePage().props.cart);
 const isMenuOpen = ref(false);
+
+// Method to handle logout
+const handleLogout = () => {
+    // Add logic to handle logout, e.g., calling a logout function or API
+};
 </script>
 
 <template>
@@ -15,12 +20,12 @@ const isMenuOpen = ref(false);
         :class="{ 'bg-white w-full': isMenuOpen, 'dark:bg-gray-800': !isMenuOpen, 'border-gray-200': true, 'z-50': true, 'relative': true }">
         <div class="max-w-screen-xl mx-auto flex items-center justify-between p-4">
             <!-- Logo and site name -->
-            <a href="#" class="hidden md:flex items-center space-x-3 rtl:space-x-reverse">
+            <Link :href="route('user.home')" class="hidden md:flex items-center space-x-3 rtl:space-x-reverse">
                 <span
                     class="px-4 py-2 rounded-md self-center text-3xl font-semibold text-[#7d836d] whitespace-nowrap dark:text-white hover:-translate-y-1 transform transition duration-200 hover:shadow-md">
                     Shantaty.<span>net</span>
                 </span>
-            </a>
+            </Link>
 
             <!-- Mobile menu button -->
             <button @click="isMenuOpen = !isMenuOpen" class="md:hidden text-gray-900 dark:text-white focus:outline-none">
@@ -32,8 +37,8 @@ const isMenuOpen = ref(false);
                 class="fixed inset-0 top-16 md:hidden bg-white dark:bg-gray-800 z-40">
                 <ul class="flex flex-col space-y-4 p-4">
                     <li>
-                        <a href="#"
-                            class="block px-3 py-2 rounded-md font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Home</a>
+                         <Link :href="route('user.home')"
+                            class="block px-3 py-2 rounded-md font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Home</Link>
                     </li>
                     <li>
                         <a href="#"
@@ -58,43 +63,18 @@ const isMenuOpen = ref(false);
                         <p>Cart</p>
                         </Link>
                     </li>
-                    <!-- User Menu or Login/Register Links -->
-                    <li v-if="auth.user" class="relative">
-                        <button type="button"
-                            class="flex text-sm hover:bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-                            id="user-menu-button" aria-expanded="false">
-                            <span class="sr-only">Open user menu</span>
-                            <span class="w-8 h-8 p-1 text-gray hover:text-white border-2 border-white rounded-full">
-                                <User />
-                            </span>
-                        </button>
-                        <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
-                            id="user-dropdown">
-                            <div class="px-4 py-3">
-                                <span class="block text-sm text-gray-900 dark:text-white">{{ auth.user.name }}</span>
-                                <span class="block text-sm text-gray-500 truncate dark:text-gray-400">{{ auth.user.email }}</span>
-                            </div>
-                            <ul class="py-2" aria-labelledby="user-menu-button">
-                                <li>
-                                    <a href="#"
-                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Dashboard</a>
-                                </li>
-                                <li>
-                                    <a href="#"
-                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Settings</a>
-                                </li>
-                                <li>
-                                    <a href="#"
-                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Earnings</a>
-                                </li>
-                                <li>
-                                    <a href="#"
-                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
-                                </li>
-                            </ul>
-                        </div>
+                    <!-- Dashboard and Logout Buttons -->
+                    <li v-if="auth.user" class="flex gap-2">
+                        <a href="route('user.dashboard')"
+                            class="px-6 py-3 mb-4 md:bg-[#b0956e] md:text-white bg-white text-[#06402b] transition duration-300 hover:bg-[#937c5b] hover:text-white">
+                        Dashboard
+                        </a>
+                        <Link :href="route('logout')" method="post"
+                            class="px-6 py-3 mb-4 md:bg-[#7d836d] md:text-white bg-white text-[#06402b] transition duration-300 hover:bg-[#937c5b] hover:text-white">
+                        Logout
+                        </Link>
                     </li>
-                    <li v-else class="flex  gap-2">
+                    <li v-else class="flex gap-2">
                         <Link :href="route('login')" type="button"
                             class="px-6 py-3 mb-4 md:bg-[#b0956e] md:text-white bg-white text-[#06402b] transition duration-300 hover:bg-[#937c5b] hover:text-white">
                         Login
@@ -110,10 +90,6 @@ const isMenuOpen = ref(false);
             <!-- Navigation Links for larger screens -->
             <div class="hidden md:flex md:items-center md:space-x-8 rtl:space-x-reverse font-medium w-full md:w-auto">
                 <ul class="flex flex-col md:flex-row md:space-x-8 mt-4 md:mt-0">
-                    <li>
-                        <a href="#"
-                            class="block px-3 py-2 rounded-md font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Home</a>
-                    </li>
                     <li>
                         <a href="#"
                             class="block px-3 py-2 rounded-md font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">About</a>
@@ -142,40 +118,15 @@ const isMenuOpen = ref(false);
 
             <!-- User and Cart Actions -->
             <div v-if="canLogin" class="hidden md:flex items-center space-x-3 rtl:space-x-reverse">
-                <div v-if="auth.user" class="relative">
-                    <button type="button"
-                        class="flex text-sm hover:bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-                        id="user-menu-button" aria-expanded="false">
-                        <span class="sr-only">Open user menu</span>
-                        <span class="w-8 h-8 p-1 text-gray hover:text-white border-2 border-white rounded-full">
-                            <User />
-                        </span>
-                    </button>
-                    <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
-                        id="user-dropdown">
-                        <div class="px-4 py-3">
-                            <span class="block text-sm text-gray-900 dark:text-white">{{ auth.user.name }}</span>
-                            <span class="block text-sm text-gray-500 truncate dark:text-gray-400">{{ auth.user.email }}</span>
-                        </div>
-                        <ul class="py-2" aria-labelledby="user-menu-button">
-                            <li>
-                                <a href="#"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Dashboard</a>
-                            </li>
-                            <li>
-                                <a href="#"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Settings</a>
-                            </li>
-                            <li>
-                                <a href="#"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Earnings</a>
-                            </li>
-                            <li>
-                                <a href="#"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
-                            </li>
-                        </ul>
-                    </div>
+                <div v-if="auth.user" class="flex gap-2">
+                    <a
+                        class="px-6 py-3 mb-4 md:bg-[#b0956e] md:text-white bg-white text-[#06402b] transition duration-300 hover:bg-[#937c5b] hover:text-white">
+                    Dashboard
+                    </a>
+                    <Link :href="route('logout')" method="post"
+                            class="px-6 py-3 mb-4 md:bg-[#7d836d] md:text-white bg-white text-[#06402b] transition duration-300 hover:bg-[#937c5b] hover:text-white">
+                        Logout
+                        </Link>
                 </div>
                 <div v-else class="flex gap-2">
                     <Link :href="route('login')" type="button"

@@ -10,7 +10,7 @@ onMounted(() => {
     initFlowbite();
 });
 defineProps({
-    products:Array
+    products: Array
 })
 
 const categories = usePage().props.categories;
@@ -125,7 +125,7 @@ const deleteProduct = async (id) => {
     } catch (error) {
         Swal.fire({
             toast: true,
-            title:  page.props.flash.error,
+            title: page.props.flash.error,
             position: "top-end",
             icon: "error",
             showConfirmButton: false,
@@ -190,9 +190,9 @@ const updateProduct = async () => {
     for (const image of productImages.value) {
         formData.append("product_images[]", image.raw);
     }
-    try{
-        await router.post('/admin/products/update/'+id.value, formData,{
-            onSuccess:(page)=>{
+    try {
+        await router.post('/admin/products/update/' + id.value, formData, {
+            onSuccess: (page) => {
                 dialogVisible.value = false;
                 resetFormData();
                 Swal.fire({
@@ -205,7 +205,7 @@ const updateProduct = async () => {
                 });
             }
         })
-    }catch(error){
+    } catch (error) {
 
     }
 }
@@ -214,96 +214,105 @@ const updateProduct = async () => {
 <template>
     <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5">
         <!-- add product diaglog -->
-        <el-dialog v-model="dialogVisible" :title="editMode ? 'Edit Product' : 'Add Product'" width="50%" :before-close="handleClose">
-    <!-- add product form -->
-    <form class="px-6 py-4" @submit.prevent="editMode ? updateProduct() : AddProduct()">
-        <!-- Product Title -->
-        <div class="relative z-0 w-full mb-4">
-            <label for="floating_title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Title</label>
-            <input type="text" v-model="title" name="floating_title" id="floating_title"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                placeholder="Type product name" required>
-        </div>
+        <el-dialog v-model="dialogVisible" :title="editMode ? 'Edit Product' : 'Add Product'" width="50%"
+            :before-close="handleClose">
+            <!-- add product form -->
+            <form class="px-6 py-4" @submit.prevent="editMode ? updateProduct() : AddProduct()">
+                <!-- Product Title -->
+                <div class="relative z-0 w-full mb-4">
+                    <label for="floating_title"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Title</label>
+                    <input type="text" v-model="title" name="floating_title" id="floating_title"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        placeholder="Type product name" required>
+                </div>
 
-        <!-- Quantity and Price -->
-        <div class="flex gap-4 mb-4">
-            <div class="flex-1">
-                <label for="qty" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Quantity</label>
-                <input v-model="quantity" required type="number" name="qty" id="qty"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    placeholder="Quantity">
-            </div>
-            <div class="flex-1">
-                <label for="floating_price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Price</label>
-                <input v-model="price" required type="number" name="floating_price" id="floating_price"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    placeholder="JOD">
-            </div>
-        </div>
+                <!-- Quantity and Price -->
+                <div class="flex gap-4 mb-4">
+                    <div class="flex-1">
+                        <label for="qty"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Quantity</label>
+                        <input v-model="quantity" required type="number" name="qty" id="qty"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            placeholder="Quantity">
+                    </div>
+                    <div class="flex-1">
+                        <label for="floating_price"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Price</label>
+                        <input v-model="price" required type="number" name="floating_price" id="floating_price"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            placeholder="JOD">
+                    </div>
+                </div>
 
-        <!-- Brand and Category -->
-        <div class="flex gap-4 mb-4">
-            <div class="flex-1">
-                <label for="brand_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Brand</label>
-                <select v-model="brand_id" id="brand_id"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    <option selected>Choose a brand</option>
-                    <option v-for="brand in brands" :key="brand.id" :value="brand.id">
-                        {{ brand.name }}
-                    </option>
-                </select>
-            </div>
-            <div class="flex-1">
-                <label for="category_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Category</label>
-                <select v-model="category_id" id="category_id"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    <option selected>Choose a category</option>
-                    <option v-for="category in categories" :key="category.id" :value="category.id">
-                        {{ category.name }}
-                    </option>
-                </select>
-            </div>
-        </div>
+                <!-- Brand and Category -->
+                <div class="flex gap-4 mb-4">
+                    <div class="flex-1">
+                        <label for="brand_id"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Brand</label>
+                        <select v-model="brand_id" id="brand_id"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option selected>Choose a brand</option>
+                            <option v-for="brand in brands" :key="brand.id" :value="brand.id">
+                                {{ brand.name }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="flex-1">
+                        <label for="category_id"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Category</label>
+                        <select v-model="category_id" id="category_id"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option selected>Choose a category</option>
+                            <option v-for="category in categories" :key="category.id" :value="category.id">
+                                {{ category.name }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
 
-        <!-- Product Description -->
-        <div class="relative z-0 w-full mb-4">
-            <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product Description</label>
-            <textarea v-model="description" id="description" rows="4"
-                class="block w-full p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Describe your product here..."></textarea>
-        </div>
+                <!-- Product Description -->
+                <div class="relative z-0 w-full mb-4">
+                    <label for="description"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product Description</label>
+                    <textarea v-model="description" id="description" rows="4"
+                        class="block w-full p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="Describe your product here..."></textarea>
+                </div>
 
-        <!-- Product Images -->
-        <div class="relative z-0 w-full mb-4">
-            <label for="" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product Images</label>
-            <el-upload v-model:file-list="productImages" list-type="picture-card" multiple
-                :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :on-change="handleFileChange">
-                <el-icon>
-                    <Plus />
-                </el-icon>
-            </el-upload>
-        </div>
+                <!-- Product Images -->
+                <div class="relative z-0 w-full mb-4">
+                    <label for="" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product
+                        Images</label>
+                    <el-upload v-model:file-list="productImages" list-type="picture-card" multiple
+                        :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :on-change="handleFileChange">
+                        <el-icon>
+                            <Plus />
+                        </el-icon>
+                    </el-upload>
+                </div>
 
-        <!-- Existing Product Images -->
-        <div class="flex justify-center flex-wrap mb-4 gap-3">
-            <div v-for="(product_image, index) in product_images" :key="product_image.id" class="relative">
-                <img class="w-32 h-32 rounded" :src="`http://127.0.0.1:8000/storage/${product_image.image}`" alt="">
-                <span @click="deleteImage(product_image, index)"
-                    class="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-red-600 border-2 border-white dark:border-gray-800 rounded-full flex items-center justify-center cursor-pointer">
-                    <CloseBold />
-                </span>
-            </div>
-        </div>
+                <!-- Existing Product Images -->
+                <div class="flex justify-center flex-wrap mb-4 gap-3">
+                    <div v-for="(product_image, index) in product_images" :key="product_image.id" class="relative">
+                        <img class="w-32 h-32 rounded" :src="`${product_image.image}`"
+                            alt="">
+                        <span @click="deleteImage(product_image, index)"
+                            class="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-red-600 border-2 border-white dark:border-gray-800 rounded-full flex items-center justify-center cursor-pointer">
+                            <CloseBold />
+                        </span>
+                    </div>
+                </div>
 
-        <!-- Submit Button -->
-        <div class="flex justify-end mt-6">
-            <button type="submit"
-                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5">
-                Submit
-            </button>
-        </div>
-    </form>
-</el-dialog>
+                <!-- Submit Button -->
+                <div class="flex justify-end mt-6">
+                    <button type="submit"
+                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5">
+                        Submit
+                    </button>
+                </div>
+            </form>
+        </el-dialog>
 
         <!-- end add product diaglog -->
         <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
@@ -334,11 +343,7 @@ const updateProduct = async () => {
                         <button type="button"
                             class="flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
                             @click="openAddModel">
-                            <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20"
-                                xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                <path clip-rule="evenodd" fill-rule="evenodd"
-                                    d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
-                            </svg>
+                            <Plus class="h-3.5 w-3.5 font-bold  mr-2" />
                             Add product
                         </button>
                         <div class="flex items-center space-x-3 w-full md:w-auto">
@@ -430,24 +435,24 @@ const updateProduct = async () => {
                                 </th>
                                 <td class="px-4 py-3">
                                     {{
-                                    product.category &&
-                                    product.category.name
-                                    ? product.category.name
-                                    : "No category"
+                                        product.category &&
+                                            product.category.name
+                                            ? product.category.name
+                                            : "No category"
                                     }}
                                 </td>
                                 <td class="px-4 py-3">
                                     {{
-                                    product.brand && product.brand.name
-                                    ? product.brand.name
-                                    : "No brand"
+                                        product.brand && product.brand.name
+                                            ? product.brand.name
+                                            : "No brand"
                                     }}
                                 </td>
                                 <td class="px-4 py-3">
                                     {{
-                                    product.quantity !== undefined
-                                    ? product.quantity
-                                    : "No quantity"
+                                        product.quantity !== undefined
+                                            ? product.quantity
+                                            : "No quantity"
                                     }}
                                 </td>
                                 <td class="px-4 py-3">
@@ -466,9 +471,9 @@ const updateProduct = async () => {
                                 <td class="px-4 py-3">
                                     JOD
                                     {{
-                                    product.price !== undefined
-                                    ? product.price
-                                    : "No price"
+                                        product.price !== undefined
+                                            ? product.price
+                                            : "No price"
                                     }}
                                 </td>
                                 <td class="px-4 py-3 flex items-center justify-end">

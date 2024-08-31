@@ -16,11 +16,12 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->decimal('total_price',20,2);
-            $table->string('status',45);
+            $table->string('status',45); //'pending', 'completed', 'shipped', 'active'
             $table->string('session_id',255);
             $table->foreignIdFor(UserAddress::class)->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignIdFor(User::class, 'created_by')->nullable();
             $table->foreignIdFor(User::class, 'updated_by')->nullable();
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
             $table->timestamps();
         });
     }

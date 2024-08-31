@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Http\Request;
 
 class Order extends Model
 {
@@ -14,6 +16,7 @@ class Order extends Model
         'session_id',
         'user_address_id',
         'created_by',
+
         'updated_by',
     ];
 
@@ -36,4 +39,20 @@ class Order extends Model
     {
         return $this->hasMany(Payment::class);
     }
+
+
+    public function scopeFiltered(Builder $query, Request $request)
+    {
+        $query
+            ->when($request->input('searchQuery'), function (Builder $q) use ($request) {
+                $q->whereHas('user', function (Builder $q) use ($request) {
+                    $q->where('name', 'like', '%' . $request->input('searchQuery') . '%');
+                });
+            })
+            ->when($request->input('status'), function (Builder $q) use ($request) {
+                $statuses = explode(',', $request->input('status'));
+                $q->whereIn('status', $statuses);
+            });
+    }
+
 }

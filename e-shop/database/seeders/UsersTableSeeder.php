@@ -14,9 +14,20 @@ class UsersTableSeeder extends Seeder
      */
     public function run(): void
     {
-        User::insert([
-            ['name' => 'Admin', 'email' => 'admin@gmail.com', 'password' => Hash::make('password'), 'isAdmin' => '1'],
-            ['name' => 'User', 'email' => 'user@gmail.com', 'password' => Hash::make('password'), 'isAdmin' => '0'],
+        User::factory()->create([
+            'name' => 'Admin',
+            'email' => 'admin@gmail.com',
+            'number' => 147258369,
+            'password' => bcrypt('password'),
+            'isAdmin' => true,
+        ]);
+
+        User::factory()->create([
+            'name' => 'User',
+            'email' => 'user@gmail.com',
+            'number' => 987654321,
+            'password' => bcrypt('password'),
+            'isAdmin' => false,
         ]);
     }
 }

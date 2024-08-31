@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\BrandsController;
@@ -16,6 +18,8 @@ use Inertia\Inertia;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 Route::get('/', [UserController::class,'index'])->name('user.home');
+// Route::get('/hello', [UserController::class,'index'])->name('user.home');
+
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -52,7 +56,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'redirectAdmin'], function() 
 
 Route::middleware(['auth','admin'])->prefix('admin')->group(function(){
     Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
-
+    // Users routes
+    Route::get('/users', [UsersController::class, 'index'])->name('admin.users.index');
+    Route::post('/users/store', [UsersController::class, 'store'])->name('users.store');
+    Route::put('/users/update/{id}', [UsersController::class, 'update'])->name('users.update');
+    Route::delete('/users/delete/{id}', [UsersController::class, 'destroy'])->name('users.delete');
     // products routes
     Route::get('/products', [ProductController::class, 'index'])->name('admin.products.index');
     Route::post('/products/store', [ProductController::class, 'store'])->name('admin.products.store');
@@ -74,6 +82,10 @@ Route::middleware(['auth','admin'])->prefix('admin')->group(function(){
     Route::post('/colors/store', [ColorsController::class, 'store'])->name('colors.store');
     Route::put('/colors/update/{id}', [ColorsController::class, 'update'])->name('colors.update');
     Route::delete('/colors/delete/{id}', [ColorsController::class, 'destroy'])->name('colors.delete');
+    // Orders routes
+    Route::get('/orders', [OrderController::class, 'index'])->name('admin.orders.index');
+    Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
+    Route::get('/orders/{id}/print-invoice', [OrderController::class, 'printInvoice'])->name('orders.printInvoice');
 });
 
 // ends
