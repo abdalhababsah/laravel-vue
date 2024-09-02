@@ -11,7 +11,11 @@ use Inertia\Inertia;
 class OrderController extends Controller
 {
     public function index(Request $request)
+
+
     {
+
+
         $orders = Order::with(['user', 'userAddress', 'orderItems.product', 'payments'])
             ->filtered($request)
             ->paginate(10);

@@ -45,6 +45,9 @@ Route::prefix('cart')->controller(CartController::class)->group(function () {
 Route::prefix('products')->controller(ProductListController::class)->group(function(){
     Route::get('/','index')->name('products.index');
 });
+Route::get('/products/view/{slug}', [ProductController::class, 'getFromSlug'])->name('products.get.from.slug');
+Route::get('/products/view/{id}/{slug}', [ProductController::class, 'show'])->name('products.show');
+
 
 //  admin routes
 Route::group(['prefix' => 'admin', 'middleware' => 'redirectAdmin'], function() {

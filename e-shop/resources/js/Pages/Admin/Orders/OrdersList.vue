@@ -90,6 +90,7 @@
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
                             <th scope="col" class="px-4 py-3">Order ID</th>
+                            <th scope="col" class="px-4 py-3">Order Status</th>
                             <th scope="col" class="px-4 py-3">User Name</th>
                             <th scope="col" class="px-4 py-3">User Number</th>
                             <th scope="col" class="px-4 py-3">Address</th>
@@ -104,6 +105,7 @@
                     <tbody>
                         <tr v-for="order in filteredOrders.data" :key="order.id" class="border-b dark:border-gray-700">
                             <td class="px-4 py-3">{{ order.id }}</td>
+                            <td class="px-4 py-3">{{ order.status }}</td>
                             <td class="px-4 py-3">{{ order.user.name }}</td>
                             <td class="px-4 py-3">{{ order.user.number }}</td>
                             <td class="px-4 py-3">

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Product\ProductStoreRequest;
 use App\Http\Requests\Product\ProductUpdateRequest;
+use App\Http\Resources\ProductResource;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
@@ -92,10 +93,48 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
+
+
     public function show(string $id)
     {
-        //
+        // Retrieve the product with its related models
+        $product = Product::with(['product_images', 'category', 'brand', 'colors'])->find($id);
+
+        // If the product is not found, return a 404 response
+        if (!$product) {
+            return Inertia::render('Errors/Error404', [
+                'error' => 'No product found with the specified ID'
+            ]);
+        }
+        // dd($product);
+
+        // If the product is found, return it using the ProductResource
+        return Inertia::render('User/ProductView', [
+            'product' => new ProductResource($product)
+        ]);
     }
+
+    public function getFromSlug($slug)
+    {
+        // Retrieve the product with its related models
+        $product = Product::with(['product_images', 'category', 'brand', 'colors'])
+        ->where('slug', $slug)
+        ->firstOrFail();
+
+        // If the product is not found, return a 404 response
+        if (!$product) {
+            return Inertia::render('Errors/Error404', [
+                'error' => 'No product found with the specified ID'
+            ]);
+        }
+        // dd($product);
+
+        // If the product is found, return it using the ProductResource
+        return Inertia::render('User/ProductView', [
+            'product' => new ProductResource($product)
+        ]);
+    }
+
 
     /**
      * Show the form for editing the specified resource.

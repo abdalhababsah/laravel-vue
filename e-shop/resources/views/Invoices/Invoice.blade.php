@@ -53,7 +53,7 @@
         }
         table th {
             background-color: #7d836d;
-            color: #fff; /* Ensure text is readable on dark background */
+            color: #fff; 
             text-align: left;
         }
         .total {

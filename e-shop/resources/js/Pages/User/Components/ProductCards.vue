@@ -2,7 +2,7 @@
 import { defineProps } from 'vue';
 import ProductsPagination from './ProductsPagination.vue';
 import Swal from "sweetalert2";
-import { router } from "@inertiajs/vue3";
+import { Link, router } from "@inertiajs/vue3";
 
 defineProps({
     products: {
@@ -51,12 +51,12 @@ const addToCart = async (product) => {
 </script>
 
 <template>
-    <div class="flex flex-col w-full">
+
         <div class="flex flex-col items-center w-full">
             <!-- Product Grid -->
             <div :class="`mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 ${gridClass} xl:gap-x-8`">
                 <div v-for="product in products.data" :key="product.id"
-                    class="group my- flex w-full max-w-xs flex-col overflow-hidden border bg-white">
+                    class="group product_card flex w-full max-w-xs flex-col overflow-hidden border bg-white">
                     <a :href="product.href" class="relative flex h-72 overflow-hidden">
                         <img :src="product.product_images.length > 0 ? `${product.product_images[0].image}` : 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg'"
                             :alt="product.title" class="absolute top-0 right-0 h-full w-full object-cover" />
@@ -64,14 +64,14 @@ const addToCart = async (product) => {
                         <!-- View Product -->
                         <div
                             class="absolute -right-16 bottom-0 mr-2 mb-4 space-y-2 transition-all duration-300 group-hover:right-0">
-                            <button
+                             <Link :href="route('products.show', { id: product.id, slug: product.slug })"
                                 class="flex h-10 w-10 items-center justify-center bg-gray-900 text-white transition hover:bg-gray-700">
                                 <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
                                     <path fill="currentColor"
                                         d="M512 160c320 0 512 352 512 352S832 864 512 864 0 512 0 512s192-352 512-352m0 64c-225.28 0-384.128 208.064-436.8 288 52.608 79.872 211.456 288 436.8 288 225.28 0 384.128-208.064 436.8-288-52.608-79.872-211.456-288-436.8-288zm0 64a224 224 0 1 1 0 448 224 224 0 0 1 0-448m0 64a160.192 160.192 0 0 0-160 160c0 88.192 71.744 160 160 160s160-71.808 160-160-71.744-160-160-160">
                                     </path>
                                 </svg>
-                            </button>
+                            </Link>
                         </div>
 
                         <!-- Add to Cart -->
@@ -121,9 +121,11 @@ const addToCart = async (product) => {
             <ProductsPagination :pagination="products" />
         </div>
 
-    </div>
+
 </template>
 
 <style scoped>
-/* Add custom styles if needed */
+.product_card{
+width: 251px;
+}
 </style>

@@ -6,6 +6,16 @@
                 <h1 class="text-3xl dark:text-white lg:text-4xl font-semibold leading-7 lg:leading-9 text-gray-800">
                     Order #{{ order.id }}
                 </h1>
+                <p
+                    class="text-xl ml-3 dark:text-white font-semibold leading-7 lg:leading-9 text-gray-800 flex items-center">
+                    <span class="inline-block w-3 h-3 rounded-full mr-2" :class="{
+                        'bg-yellow-500': order.status === 'pending',
+                        'bg-green-500': order.status === 'completed',
+                        'bg-blue-500': order.status === 'shipped'
+                    }"></span>
+                    {{ order.status }}
+                </p>
+
                 <p class="text-base dark:text-gray-300 font-medium leading-6 text-gray-600">
                     {{ order.created_at_formatted }}
                 </p>
