@@ -9,17 +9,13 @@ const auth = usePage().props.auth;
 const cart = computed(() => usePage().props.cart);
 const isMenuOpen = ref(false);
 
-// Computed property to determine the dashboard route based on the user's role
-const dashboardRoute = computed(() => {
-    return auth.user.isAdmin ? route('admin.dashboard') : route('user.dashboard');
-});
+
 
 // Method to handle logout
 const handleLogout = () => {
     // Add logic to handle logout, e.g., calling a logout function or API
 };
 </script>
-
 <template>
     <nav :class="{ 'bg-white w-full': isMenuOpen, 'dark:bg-gray-800': !isMenuOpen, 'border-gray-200': true, 'z-50': true, 'relative': true }">
         <div class="max-w-screen-xl mx-auto flex items-center justify-between p-4">
@@ -58,11 +54,14 @@ const handleLogout = () => {
                             <p>Cart</p>
                         </Link>
                     </li>
-                    <!-- Dashboard and Logout Buttons -->
                     <li v-if="auth.user" class="flex gap-2">
-                        <Link :href="dashboardRoute" class="px-6 py-3 mb-4 md:bg-[#b0956e] md:text-white bg-white text-[#06402b] transition duration-300 hover:bg-[#937c5b] hover:text-white">
+                        <a v-if="auth.user.isAdmin"
+                        href="admin/dashboard" class="px-6 py-3 mb-4 md:bg-[#b0956e] md:text-white bg-white text-[#06402b] transition duration-300 hover:bg-[#937c5b] hover:text-white">
                             Dashboard
-                        </Link>
+                        </a>
+                        <a v-else href="user/dashboard" class="px-6 py-3 mb-4 md:bg-[#b0956e] md:text-white bg-white text-[#06402b] transition duration-300 hover:bg-[#937c5b] hover:text-white">
+                            Dashboard
+                        </a>
                         <Link :href="route('logout')" method="post" class="px-6 py-3 mb-4 md:bg-[#7d836d] md:text-white bg-white text-[#06402b] transition duration-300 hover:bg-[#937c5b] hover:text-white">
                             Logout
                         </Link>
@@ -104,9 +103,12 @@ const handleLogout = () => {
             <!-- User and Cart Actions -->
             <div v-if="canLogin" class="hidden md:flex items-center space-x-3 rtl:space-x-reverse">
                 <div v-if="auth.user" class="flex gap-2">
-                    <Link :href="dashboardRoute" class="px-6 py-3 mb-4 md:bg-[#b0956e] md:text-white bg-white text-[#06402b] transition duration-300 hover:bg-[#937c5b] hover:text-white">
+                    <a v-if="auth.user.isAdmin" href="admin/dashboard" class="px-6 py-3 mb-4 md:bg-[#b0956e] md:text-white bg-white text-[#06402b] transition duration-300 hover:bg-[#937c5b] hover:text-white">
                         Dashboard
-                    </Link>
+                    </a>
+                    <a v-else href="user/dashboard" class="px-6 py-3 mb-4 md:bg-[#b0956e] md:text-white bg-white text-[#06402b] transition duration-300 hover:bg-[#937c5b] hover:text-white">
+                        Dashboard
+                    </a>
                     <Link :href="route('logout')" method="post" class="px-6 py-3 mb-4 md:bg-[#7d836d] md:text-white bg-white text-[#06402b] transition duration-300 hover:bg-[#937c5b] hover:text-white">
                         Logout
                     </Link>

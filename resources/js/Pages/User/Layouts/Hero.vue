@@ -8,12 +8,12 @@
             </div>
 
             <!-- Content Section -->
-            <div class="z-10 w-full px-6 mb-8 text-center ml-12 md:w-1/2 md:mb-0 md:text-left">
+            <div class="z-10 w-full px-6 mb-8 text-center md:ml-12 lg:ml-12 md:w-1/2 md:mb-0 md:text-left">
                 <h1
                     class="md:text-[#b0956e] md:text-5xl text-white text-4xl lg:text-[#b0956e] lg:text-6xl font-bold mb-4 leading-[2.5rem] sm:leading-[3rem] md:leading-[4rem] lg:leading-[5rem] z-10">
                     CARRY YOUR CONFIDENCE
                 </h1>
-                <p class="mt-4 mb-4 leading-6 text-xl text-[#06402b] sm:mt-8 sm:mb-6 sm:leading-8">
+                <p class="mt-4 mb-4 leading-6 text-xl text-white sm:mt-8 sm:mb-6 sm:leading-8">
                     Perfect handbag made with unique style very elegant for everyday use. It's secured with magnetic and
                     best
                     option for your high fashion look.
