@@ -16,7 +16,5 @@
     </div>
 </template>
 <script setup>
-    import useMeta from '@/Composables/use-meta';
 import { Link } from '@inertiajs/vue3';
-    useMeta({ title: 'Error 500' });
 </script>
