@@ -4,7 +4,7 @@ import { initFlowbite } from 'flowbite';
 import AdminLayout from './Components/AdminLayout.vue';
 import { LiUsers, LaFileInvoiceSolid, HeOutlineMoneyBag, LaShoppingBagSolid } from '@kalimahapps/vue-icons';
 import { defineProps, watch } from 'vue';
-import ApexCharts from 'vue3-apexcharts'; // Import ApexCharts
+
 
 const props = defineProps({
     UsersCount: Number,

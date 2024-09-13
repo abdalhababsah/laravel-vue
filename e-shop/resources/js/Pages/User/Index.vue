@@ -12,26 +12,14 @@ defineProps({
     featured_products: Array,
     products: Array
 })
-
 </script>
-
 <template>
     <UserLayouts>
         <Hero />
-
-        <CompanyDivider/>
-        <ProductsSliderHome/>
-        <ImageDivider/>
-        <ImageSlider/>
-        <AboutSectionHome/>
-
-
-                <!-- <ProductCards :products="featured_products" gridClass="lg:grid-cols-4" /> -->
-
-      </UserLayouts>
-
-
-
-
-
+        <CompanyDivider />
+        <ProductsSliderHome :products="featured_products" />
+        <ImageDivider />
+        <ImageSlider :newProducts="new_products" />
+        <AboutSectionHome />
+    </UserLayouts>
 </template>

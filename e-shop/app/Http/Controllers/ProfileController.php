@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
-
+use App\Models\UserAddress;
+use App\Http\Requests\AddressUpdateRequest;
 class ProfileController extends Controller
 {
     /**
@@ -40,6 +41,9 @@ class ProfileController extends Controller
         return Redirect::route('profile.edit');
     }
 
+
+
+
     /**
      * Delete the user's account.
      */
@@ -58,6 +62,6 @@ class ProfileController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return Redirect::to('/');
+        return Redirect::to('/login');
     }
 }

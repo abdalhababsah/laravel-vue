@@ -19,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
             'redirectAdmin' => \App\Http\Middleware\redirectAdmin::class,
+            'redirectUser' => \App\Http\Middleware\RedirectUser::class,
         ]);
 
         //

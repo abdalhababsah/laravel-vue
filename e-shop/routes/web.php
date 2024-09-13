@@ -1,10 +1,14 @@
 <?php
 
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\User\OrderController as UserOrdersController;
+use App\Http\Controllers\User\UserProfileController;
+use App\Http\Controllers\User\UserDashboardController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\BrandsController;
+use App\Http\Controllers\ContactUsController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\ColorsController;
@@ -16,21 +20,28 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
-
+// ->middleware('verified');
 Route::get('/', [UserController::class,'index'])->name('user.home');
-// Route::get('/hello', [UserController::class,'index'])->name('user.home');
+ Route::get('/contact-us', [ContactUsController::class,'index'])->name('contactUs');
 
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+
 // end
+// web.php
+
+Route::group(['prefix' => 'user', 'middleware' => ['auth', 'verified']], function() {
+    Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
+    Route::get('/orders', [UserOrdersController::class, 'index'])->name('user.orders.index');
+    Route::get('profile', [UserProfileController::class, 'edit'])->name('user.profile');
+    Route::patch('/profile', [UserProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [UserProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::patch('update/address', [UserProfileController::class, 'updateAddress'])->name('address.update');
+});
+
 
 // add to cart
 
@@ -41,7 +52,7 @@ Route::prefix('cart')->controller(CartController::class)->group(function () {
     Route::delete('delete/{product}', 'delete')->name('cart.delete');  // Delete a product from the cart
 });
 
-// routes for products list and and filters
+// routes for products list and filters
 Route::prefix('products')->controller(ProductListController::class)->group(function(){
     Route::get('/','index')->name('products.index');
 });

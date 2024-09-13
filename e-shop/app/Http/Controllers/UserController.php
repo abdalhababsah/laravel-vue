@@ -10,6 +10,7 @@ use Inertia\Inertia;
 class UserController extends Controller
 {
     public function index(){
+        // dd(bcrypt('password'));
         $featured_products = Product::with('brand', 'category', 'product_images')
         ->where('product_type', 'featured')
         ->limit(8)

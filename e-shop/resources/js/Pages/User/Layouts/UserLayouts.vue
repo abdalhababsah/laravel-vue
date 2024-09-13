@@ -9,17 +9,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <!-- Container with margins and background color -->
-    <!-- Navbar -->
+
     <Header />
-
-    <!-- Hero Section -->
-    <!-- Content for hero section goes here -->
-
-    <!-- Product List -->
     <slot />
-
-    <!-- Footer -->
     <Footer />
 
 </template>

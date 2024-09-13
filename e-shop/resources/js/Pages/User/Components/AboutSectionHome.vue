@@ -1,8 +1,11 @@
+
+
+
 <template>
     <!-- ====== About Section Start -->
-    <div class="container mx-auto px-4 sm:px-2 md:px-10 lg:px-15 xl:px-10">
+    <div class="container mx-auto  px-4 sm:px-2 md:px-10 lg:px-15 xl:px-10">
 
-        <section id="about" class="flex items-center justify-center my-20">
+        <section id="about" class="flex mx-7 items-center justify-center my-20">
             <div class="container">
                 <div class="wow fadeInUp" data-wow-delay=".2s">
                     <div class="flex flex-wrap items-center -mx-4">
@@ -12,7 +15,7 @@
                                     class="mb-5 text-3xl font-bold leading-tight text-[#b0956e] dark:text-white sm:text-[40px] sm:leading-[1.2]">
                                     Brilliant Toolkit to Build Nextgen Website Faster.
                                 </h2>
-                                <p class="mb-10 text-base leading-relaxed text-body-color dark:text-dark-6">
+                                <p class="mb-10 text-base leading-relaxed text-body-color dark:text-dark-6 ">
                                     The main ‘thrust' is to focus on educating attendees on how to
                                     best protect highly vulnerable business applications with
                                     interactive panel discussions and roundtables led by subject

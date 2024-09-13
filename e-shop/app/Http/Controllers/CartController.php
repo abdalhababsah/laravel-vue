@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\Cart;
 use App\Http\Resources\CartResource;
+use App\Http\Resources\ProductResource;
 use App\Models\CartItem;
 use App\Models\Product;
 use App\Models\UserAddress;
@@ -12,20 +13,21 @@ use Inertia\Inertia;
 
 class CartController extends Controller
 {
-    public function view(Request $request, Product $product)
+    public function view(Request $request, Product $product): \Inertia\Response
     {
         $user = $request->user();
 
         if ($user) {
             $cartItems = CartItem::where('user_id', $user->id)->get();
             $userAddress = UserAddress::where('user_id', $user->id)->where('isMain', 1)->first();
+            $PeopleAlsoBought = Product::with(['product_images', 'brand', 'colors'])->inRandomOrder()->limit(3)->get();
 
-
-                return Inertia::render(
+            return Inertia::render(
                     'User/CartList',
                     [
                         'cartItems' => $cartItems,
                         'userAddress' => $userAddress,
+                        'PeopleAlsoBought' => ProductResource::collection($PeopleAlsoBought),
                     ]
                 );
 
@@ -34,11 +36,13 @@ class CartController extends Controller
             // dd('1');
             $cartItems = Cart::getCookieCartItems();
 
-                $cartItems= new CartResource(Cart::getProductsAndCartItems());
-                return Inertia::render(
+            $cartItems= new CartResource(Cart::getProductsAndCartItems());
+            $PeopleAlsoBought = Product::with(['product_images', 'brand', 'colors'])->inRandomOrder()->limit(3)->get();
+            return Inertia::render(
                     'User/CartList',
                     [
                         'cartItems' => $cartItems,
+                        'PeopleAlsoBought' => ProductResource::collection($PeopleAlsoBought),
                         ]
                     );
 
