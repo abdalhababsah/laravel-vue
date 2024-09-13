@@ -4,25 +4,35 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
+
+// Define props and check if address is defined
 const props = defineProps({
-    address:Array
-})
+    address: {
+        type: Object,
+        default: () => ({})
+    }
+});
+
+// Safely access address properties or use empty strings/default values
+const address = props.address || {};
+
 const user = usePage().props.auth.user;
 
 const form = useForm({
-    address1: props?.address.address1 || '',
-    address2: props?.address.address2 || '',
-    city: props?.address.city || '',
-    state: props?.address.state || '',
-    zipcode: props?.address.zipcode || '',
-    country_code: props?.address.country_code || '',
-    isMain: props?.address.isMain || false,
+    address1: address.address1 || '',
+    address2: address.address2 || '',
+    city: address.city || '',
+    state: address.state || '',
+    zipcode: address.zipcode || '',
+    country_code: address.country_code || '',
+    isMain: address.isMain || false,
 });
 
 const updateAddress = () => {
     form.patch(route('address.update'));
 };
 </script>
+
 
 <template>
     <section>
@@ -43,7 +53,7 @@ const updateAddress = () => {
                     autofocus
                     autocomplete="address-line1"
                 />
-                <InputError class="mt-2" :message="form.errors.address1" />
+                <InputError class="mt-2" :message="form.errors?.address1" />
             </div>
 
             <div>
@@ -55,7 +65,7 @@ const updateAddress = () => {
                     v-model="form.address2"
                     autocomplete="address-line2"
                 />
-                <InputError class="mt-2" :message="form.errors.address2" />
+                <InputError class="mt-2" :message="form.errors?.address2" />
             </div>
 
             <div>
@@ -68,7 +78,7 @@ const updateAddress = () => {
                     required
                     autocomplete="address-level2"
                 />
-                <InputError class="mt-2" :message="form.errors.city" />
+                <InputError class="mt-2" :message="form.errors?.city" />
             </div>
 
             <div>
@@ -80,7 +90,7 @@ const updateAddress = () => {
                     v-model="form.state"
                     autocomplete="address-level1"
                 />
-                <InputError class="mt-2" :message="form.errors.state" />
+                <InputError class="mt-2" :message="form.errors?.state" />
             </div>
 
             <div>
@@ -93,7 +103,7 @@ const updateAddress = () => {
                     required
                     autocomplete="postal-code"
                 />
-                <InputError class="mt-2" :message="form.errors.zipcode" />
+                <InputError class="mt-2" :message="form.errors?.zipcode" />
             </div>
 
             <div>
@@ -106,7 +116,7 @@ const updateAddress = () => {
                     required
                     autocomplete="country"
                 />
-                <InputError class="mt-2" :message="form.errors.country_code" />
+                <InputError class="mt-2" :message="form.errors?.country_code" />
             </div>
 
             <div>
@@ -118,7 +128,7 @@ const updateAddress = () => {
                     />
                     <span class="ml-2 text-sm text-gray-600">Set as Main Address</span>
                 </label>
-                <InputError class="mt-2" :message="form.errors.isMain" />
+                <InputError class="mt-2" :message="form.errors?.isMain" />
             </div>
 
             <div class="flex items-center gap-4">
