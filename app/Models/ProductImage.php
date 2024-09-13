@@ -24,10 +24,10 @@ class ProductImage extends Model
         $image = Arr::get($this->attributes, 'image');
         if ($image) {
             $imagePath = ltrim($image, '/');
-            return 'http://127.0.0.1:8000' . '/storage/' . $imagePath;
+            return config('app.url') . '/storage/' . $imagePath;
         }
         return $image;
     }
 
-    // config('app.url')
+    //
 }

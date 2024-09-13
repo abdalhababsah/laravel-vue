@@ -2,7 +2,6 @@
 import UserLayouts from './Layouts/UserLayouts.vue';
 import { ref, watch } from 'vue';
 import { router, useForm } from '@inertiajs/vue3';
-// import ProductsPagination from './Components/ProductsPagination.vue'
 import {
     Menu,
     MenuButton,
@@ -66,7 +65,6 @@ defineProps({
     brands: Array,
     colors: Array,
 });
-
 </script>
 
 <template>
@@ -81,13 +79,7 @@ defineProps({
                         <div class="flex items-center">
                             <Menu as="div" class="relative inline-block text-left">
                                 <div>
-                                    <MenuButton
-                                        class="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
-                                        Sort
-                                        <ChevronDownIcon
-                                            class="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                                            aria-hidden="true" />
-                                    </MenuButton>
+                                    <!-- Sort button removed for clarity -->
                                 </div>
 
                                 <transition enter-active-class="transition ease-out duration-100"
@@ -101,22 +93,39 @@ defineProps({
                                         <div class="py-1">
                                             <MenuItem v-for="option in sortOptions" :key="option.name"
                                                 v-slot="{ active }">
-                                            <a :href="option.href"
-                                                :class="[option.current ? 'font-medium text-gray-900' : 'text-gray-500', active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm']">{{
-                                                    option.name }}</a>
+                                                <a :href="option.href"
+                                                    :class="[option.current ? 'font-medium text-gray-900' : 'text-gray-500', active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm']">{{
+                                                        option.name }}</a>
                                             </MenuItem>
                                         </div>
                                     </MenuItems>
                                 </transition>
                             </Menu>
 
-
                             <button type="button"
                                 class="-m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 sm:ml-6 lg:hidden"
-                                @click="mobileFiltersOpen = true">
+                                @click="mobileFiltersOpen = !mobileFiltersOpen">
                                 <span class="sr-only">Filters</span>
                                 <FunnelIcon class="h-5 w-5" aria-hidden="true" />
                             </button>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Filter Dialog -->
+                    <div v-if="mobileFiltersOpen" class="fixed inset-0 z-50 overflow-y-auto bg-gray-500 bg-opacity-75">
+                        <div class="flex justify-end p-4">
+                            <button @click="mobileFiltersOpen = false" class="text-white">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="bg-white p-4">
+                            <h3 class="text-lg font-medium">Filters</h3>
+                            <DisclosureFilter :items="categories" sectionTitle="Categories" v-model="selectedCategory" />
+                            <DisclosureFilter :items="brands" sectionTitle="Brands" v-model="selectedBrands" />
+                            <DisclosureFilter :items="colors" sectionTitle="Colors" v-model="selectedColor" />
+
                         </div>
                     </div>
 
@@ -124,31 +133,27 @@ defineProps({
                         <h2 id="products-heading" class="sr-only">Products</h2>
 
                         <div class="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
-                            <!-- Filters -->
+                            <!-- Desktop Filters -->
                             <div class="hidden lg:block">
-                                <h3 class="sr-only">Prices</h3>
+                                <!-- Min and Max Price Input -->
+                                <!-- Filter Inputs and Buttons -->
                                 <div class="flex flex-col sm:flex-row items-end gap-4">
-                                    <!-- Min Price Input -->
                                     <div class="flex flex-col gap-2 flex-grow">
                                         <label for="min-price"
-                                            class="text-sm font-semibold text-gray-700 dark:text-gray-300">Min
-                                            Price</label>
+                                            class="text-sm font-semibold text-gray-700 dark:text-gray-300">Min Price</label>
                                         <input v-model="filterPrices.prices[0]" type="number" id="min-price"
                                             class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             placeholder="10" min="0" max="100" required />
                                     </div>
 
-                                    <!-- Max Price Input -->
                                     <div class="flex flex-col gap-2 flex-grow">
                                         <label for="max-price"
-                                            class="text-sm font-semibold text-gray-700 dark:text-gray-300">Max
-                                            Price</label>
+                                            class="text-sm font-semibold text-gray-700 dark:text-gray-300">Max Price</label>
                                         <input v-model="filterPrices.prices[1]" type="number" id="max-price"
                                             class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             placeholder="100" min="0" max="1000" required />
                                     </div>
 
-                                    <!-- Filter Button -->
                                     <div>
                                         <button @click="priceFilter()"
                                             class="inline-flex items-center px-4 py-3 text-sm font-semibold text-black bg-[#e5e7eb] rounded hover:bg-black hover:text-[#e5e7eb] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-400 w-full sm:w-auto">
@@ -157,30 +162,21 @@ defineProps({
                                     </div>
                                 </div>
 
-                                <!-- Category Filter -->
-                                <DisclosureFilter :items="categories" sectionTitle="Categories"
-                                    v-model="selectedCategory" />
-
-                                <!-- Brand Filter -->
+                                <DisclosureFilter :items="categories" sectionTitle="Categories" v-model="selectedCategory" />
                                 <DisclosureFilter :items="brands" sectionTitle="Brands" v-model="selectedBrands" />
-
-                                <!-- Color Filter -->
                                 <DisclosureFilter :items="colors" sectionTitle="Colors" v-model="selectedColor" />
                             </div>
 
-                            <!-- Product grid -->
+                            <!-- Product Grid -->
                             <div class="lg:col-span-3">
-                                <!-- Your content -->
                                 <ProductCards :products="products" gridClass="lg:grid-cols-3" />
                             </div>
                         </div>
+                        <!-- Pagination Component -->
                         <!-- <ProductsPagination/> -->
                     </section>
                 </main>
             </div>
         </div>
-
-
-
     </UserLayouts>
 </template>
