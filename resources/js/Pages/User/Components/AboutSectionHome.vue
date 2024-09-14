@@ -1,9 +1,10 @@
-
-
+<script setup lang="ts">
+import { Link } from '@inertiajs/vue3';
+</script>
 
 <template>
     <!-- ====== About Section Start -->
-    <div class="container mx-auto  px-4 sm:px-2 md:px-10 lg:px-15 xl:px-10">
+    <div class="container mx-auto px-4 sm:px-2 md:px-10 lg:px-15 xl:px-10">
 
         <section id="about" class="flex mx-7 items-center justify-center my-20">
             <div class="container">
@@ -13,24 +14,18 @@
                             <div class="mb-12 max-w-[540px] lg:mb-0">
                                 <h2
                                     class="mb-5 text-3xl font-bold leading-tight text-[#b0956e] dark:text-white sm:text-[40px] sm:leading-[1.2]">
-                                    Brilliant Toolkit to Build Nextgen Website Faster.
+                                    Discover Our Exclusive Collection of Premium Bags
                                 </h2>
-                                <p class="mb-10 text-base leading-relaxed text-body-color dark:text-dark-6 ">
-                                    The main ‘thrust' is to focus on educating attendees on how to
-                                    best protect highly vulnerable business applications with
-                                    interactive panel discussions and roundtables led by subject
-                                    matter experts.
-                                    <br />
-                                    <br />
-                                    The main ‘thrust' is to focus on educating attendees on how to
-                                    best protect highly vulnerable business applications with
-                                    interactive panel.
+                                <p class="mb-10 text-base leading-relaxed text-body-color dark:text-dark-6">
+                                    At Shantaty.net, we are committed to bringing you a stunning range of premium bags that perfectly blend style, functionality, and elegance. From timeless classics to the latest trends, our bags are designed for every occasion—whether you're looking for a chic handbag or a versatile tote.
+                                    <br /><br />
+                                    Our expert craftsmanship, attention to detail, and passion for fashion ensure that every piece in our collection stands out. With years of experience in the industry, we pride ourselves on offering top-quality products that resonate with your unique style.
                                 </p>
 
-                                <a href="javascript:void(0)"
-                                    class="inline-flex items-center justify-center py-3 text-base font-medium text-center text-white border  bg-[#7d836d] px-7 hover:bg-[#937c5b] ">
-                                    Know More
-                                </a>
+                                <Link :href="route('AboutUs')"
+                                    class="inline-flex items-center justify-center py-3 text-base font-medium text-center text-white border  bg-[#7d836d] px-7 hover:bg-[#937c5b]">
+                                    Explore More
+                                </Link>
                             </div>
                         </div>
 
@@ -57,10 +52,10 @@
                                                 09
                                             </span>
                                             <span class="block text-base font-semibold text-white">
-                                                We have
+                                                Years of Excellence
                                             </span>
                                             <span class="block text-base font-medium text-white text-opacity-70">
-                                                Years of experience
+                                                Crafting premium bags with passion
                                             </span>
                                         </div>
                                         <div>

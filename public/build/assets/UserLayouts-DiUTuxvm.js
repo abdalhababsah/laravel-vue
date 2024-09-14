@@ -1,0 +1,1 @@
+import{i as t}from"./index-Cm3gHOgs.js";import r from"./Footer-B1dVs24y.js";import a from"./Header-B_5os7_B.js";import{j as s,c as m,f as o,D as n,F as i,o as c}from"./app-icZ8lXzv.js";import"./_plugin-vue_export-helper-DlAUqK2U.js";const k={__name:"UserLayouts",setup(l){return s(()=>{t()}),(e,p)=>(c(),m(i,null,[o(a),n(e.$slots,"default"),o(r)],64))}};export{k as default};

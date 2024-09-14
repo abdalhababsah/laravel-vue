@@ -38,7 +38,7 @@ const handleLogout = () => {
                         <Link :href="route('user.home')" class="block px-3 py-2 rounded-md font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Home</Link>
                     </li>
                     <li>
-                        <a href="#" class="block px-3 py-2 rounded-md font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">About</a>
+                        <Link :href="route('AboutUs')"  class="block px-3 py-2 rounded-md font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">About</Link>
                     </li>
                     <li>
                         <a href="#" class="block px-3 py-2 rounded-md font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Contact</a>
@@ -81,7 +81,7 @@ const handleLogout = () => {
             <div class="hidden md:flex md:items-center md:space-x-8 rtl:space-x-reverse font-medium w-full md:w-auto">
                 <ul class="flex flex-col md:flex-row md:space-x-8 mt-4 md:mt-0">
                     <li>
-                        <a href="#" class="block px-3 py-2 rounded-md font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">About</a>
+                        <Link :href="route('AboutUs')" class="block px-3 py-2 rounded-md font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">About</Link>
                     </li>
                     <li>
                         <a href="#" class="block px-3 py-2 rounded-md font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Contact</a>

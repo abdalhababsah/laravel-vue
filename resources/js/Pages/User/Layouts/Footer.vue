@@ -23,7 +23,8 @@
             </ul>
         </div>
         <hr class="my-6 p-2 border-white sm:mx-auto lg:my-8" />
-        <span class="block text-sm text-white sm:text-center dark:text-gray-400">© 2024 <a href="https://shantaty.net" class="hover:underline">Shantaty™</a>. All Rights Reserved.</span>
+        <span class="block text-sm text-white sm:text-center dark:text-gray-400">© 2024 <a href="https://shantaty.net" class="hover:underline text-black">Shantaty™</a>. All Rights Reserved.</span>
+        <span class="block text-sm text-white sm:text-center dark:text-gray-400">Developed by <a href="https://www.linkedin.com/in/abdalrahman-al-hababsah/" class="hover:underline text-black">abdalrahman-al-hababsah</a></span>
     </div>
 </footer>
 </template>

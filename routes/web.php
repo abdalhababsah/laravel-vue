@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\User\OrderController as UserOrdersController;
 use App\Http\Controllers\User\UserProfileController;
@@ -23,6 +24,7 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 // ->middleware('verified');
 Route::get('/', [UserController::class,'index'])->name('user.home');
  Route::get('/contact-us', [ContactUsController::class,'index'])->name('contactUs');
+ Route::get('/about-us', [AboutUsController::class,'index'])->name('AboutUs');
 
 
 Route::get('/dashboard', function () {

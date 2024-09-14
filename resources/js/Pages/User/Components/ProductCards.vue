@@ -48,6 +48,8 @@ const addToCart = async (product) => {
         });
     }
 };
+
+
 </script>
 
 <template>
@@ -88,7 +90,7 @@ const addToCart = async (product) => {
                         </div>
 
                         <!-- Add to Wishlist -->
-                        <div
+                        <!-- <div
                             class="absolute -right-16 bottom-24 mr-2 mb-4 space-y-2 transition-all duration-300 group-hover:right-0">
                             <button
                                 class="flex h-10 w-10 items-center justify-center bg-gray-900 text-white transition hover:bg-gray-700">
@@ -99,7 +101,7 @@ const addToCart = async (product) => {
                                         clip-rule="evenodd" />
                                 </svg>
                             </button>
-                        </div>
+                        </div> -->
                     </a>
 
                     <div class="mt-4 px-5 pb-5 flex justify-between">
