@@ -8,7 +8,7 @@
             </div>
 
             <!-- Content Section -->
-            <div class="z-10 w-full px-6 mb-8 text-center md:ml-12 lg:ml-12 md:w-1/2 md:mb-0 md:text-left">
+            <div class="z-10 w-full px-6 mb-8 text-center  lg:ml-12 md:w-1/2 md:mb-0 md:text-left   md:ml-12">
                 <h1
                     class="md:text-[#b0956e] md:text-5xl text-white text-4xl lg:text-[#b0956e] lg:text-6xl font-bold mb-4 leading-[2.5rem] sm:leading-[3rem] md:leading-[4rem] lg:leading-[5rem] z-10">
                     CARRY YOUR CONFIDENCE

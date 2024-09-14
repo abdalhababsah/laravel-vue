@@ -59,7 +59,7 @@ const handleLogout = () => {
                         href="admin/dashboard" class="px-6 py-3 mb-4 md:bg-[#b0956e] md:text-white bg-white text-[#06402b] transition duration-300 hover:bg-[#937c5b] hover:text-white">
                             Dashboard
                         </a>
-                        <a v-else href="user/dashboard" class="px-6 py-3 mb-4 md:bg-[#b0956e] md:text-white bg-white text-[#06402b] transition duration-300 hover:bg-[#937c5b] hover:text-white">
+                        <a v-else  class="px-6 py-3 mb-4 md:bg-[#b0956e] md:text-white bg-white text-[#06402b] transition duration-300 hover:bg-[#937c5b] hover:text-white" href="user/dashboard">
                             Dashboard
                         </a>
                         <Link :href="route('logout')" method="post" class="px-6 py-3 mb-4 md:bg-[#7d836d] md:text-white bg-white text-[#06402b] transition duration-300 hover:bg-[#937c5b] hover:text-white">
@@ -106,7 +106,8 @@ const handleLogout = () => {
                     <a v-if="auth.user.isAdmin" href="admin/dashboard" class="px-6 py-3 mb-4 md:bg-[#b0956e] md:text-white bg-white text-[#06402b] transition duration-300 hover:bg-[#937c5b] hover:text-white">
                         Dashboard
                     </a>
-                    <a v-else href="user/dashboard" class="px-6 py-3 mb-4 md:bg-[#b0956e] md:text-white bg-white text-[#06402b] transition duration-300 hover:bg-[#937c5b] hover:text-white">
+
+                    <a v-else  class="px-6 py-3 mb-4 md:bg-[#b0956e] md:text-white bg-white text-[#06402b] transition duration-300 hover:bg-[#937c5b] hover:text-white" href="user/dashboard">
                         Dashboard
                     </a>
                     <Link :href="route('logout')" method="post" class="px-6 py-3 mb-4 md:bg-[#7d836d] md:text-white bg-white text-[#06402b] transition duration-300 hover:bg-[#937c5b] hover:text-white">
