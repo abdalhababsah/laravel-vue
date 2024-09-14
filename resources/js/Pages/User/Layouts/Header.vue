@@ -41,7 +41,7 @@ const handleLogout = () => {
                         <Link :href="route('AboutUs')"  class="block px-3 py-2 rounded-md font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">About</Link>
                     </li>
                     <li>
-                        <a href="#" class="block px-3 py-2 rounded-md font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Contact</a>
+                        <Link :href="route('contactUs')" class="block px-3 py-2 rounded-md font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Contact</Link>
                     </li>
                     <li v-if="canLogin">
                         <Link :href="route('products.index')" class="block px-3 py-2 rounded-md font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Shop</Link>
@@ -84,7 +84,7 @@ const handleLogout = () => {
                         <Link :href="route('AboutUs')" class="block px-3 py-2 rounded-md font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">About</Link>
                     </li>
                     <li>
-                        <a href="#" class="block px-3 py-2 rounded-md font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Contact</a>
+                        <Link :href="route('contactUs')" class="block px-3 py-2 rounded-md font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Contact</Link>
                     </li>
                     <li v-if="canLogin">
                         <Link :href="route('products.index')" class="block px-3 py-2 rounded-md font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Shop</Link>
