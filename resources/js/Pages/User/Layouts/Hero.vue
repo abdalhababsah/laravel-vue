@@ -1,3 +1,7 @@
+<script setup lang="ts">
+import { Link } from '@inertiajs/vue3';
+</script>
+
 <template>
     <div class="container mx-auto px-4 sm:px-2 md:px-10 lg:px-15 xl:px-10">
 
@@ -19,10 +23,10 @@
                     option for your high fashion look.
                 </p>
                 <div class="flex gap-3 mt-4 sm:flex-row sm:mt-8">
-                    <button
+                    <Link :href="route('products.index')"
                         class="px-3 py-3 mb-4 md:bg-[#7d836d] md:text-white bg-white text-[#06402b] transition duration-300 sm:px-4 sm:mb-6 hover:bg-[#937c5b] hover:text-white">
                         Go To Shop
-                    </button>
+                    </Link>
                 </div>
             </div>
 
