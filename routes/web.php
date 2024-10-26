@@ -12,6 +12,7 @@ use App\Http\Controllers\BrandsController;
 use App\Http\Controllers\ContactUsController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ColorsController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductListController;
@@ -42,6 +43,7 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth', 'verified']], functio
     Route::patch('/profile', [UserProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [UserProfileController::class, 'destroy'])->name('profile.destroy');
     Route::patch('update/address', [UserProfileController::class, 'updateAddress'])->name('address.update');
+    Route::get('checkout', [CheckoutController::class, 'index'])->name('checkout');
 });
 
 

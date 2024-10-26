@@ -3,13 +3,11 @@ import { computed } from 'vue';
 import UserLayouts from './Layouts/UserLayouts.vue';
 import PeopleAlsoBoughtProducts from "./Components/PeopleAlsoBoughtProducts.vue";
 import { Link, router, usePage } from "@inertiajs/vue3";
-import ProductCards from "./Components/ProductCards.vue";
+import StepNavigation from './Components/checkout/StepNavigation.vue';
 const carts = computed(() => usePage().props.cart.data.items);
 const total = computed(() => usePage().props.cart.data.total);
 const products = computed(() => usePage().props.cart.data.products);
 const PeopleAlsoBought = computed(() => usePage().props.PeopleAlsoBought.data);
-
-// console.log(products[0]);
 const itemId = (id) => carts.value.findIndex((item) => item.product_id === id);
 const update = (product, quantity) => {
     router.patch(route('cart.update', product.id), { quantity }, {
@@ -35,18 +33,23 @@ const remove = (product) => {
 </script>
 <template>
     <UserLayouts>
-        <section class="bg-white  antialiased rounded-b-3xl dark:bg-gray-900 md:py-14 sm:py-8 lg:py-14">
+        <section class="bg-white lg:mx-36 antialiased lg:mt-2 dark:bg-gray-900 md:py-14 sm:py-8 lg:py-14">
             <div class="mx-auto max-w-screen-xl px-4 2xl:px-0">
-                <h2 class="text-base font-semibold text-gray-900 dark:text-white sm:text-xl">Shopping Cart</h2>
+                <StepNavigation
+                    :disableCart="false"
+                    :disableCheckout="true"
+                    :disableOrderSummary="true"
+                />
+                <h2 class="text-base mt-8  font-semibold text-gray-900 dark:text-white sm:text-xl">Shopping Cart</h2>
                 <div class="mt-6 sm:mt-8 md:gap-6 lg:flex lg:items-start xl:gap-8">
                     <div class="mx-auto w-full flex-none lg:max-w-2xl xl:max-w-4xl">
                         <div v-if="products.length === 0"
-                            class="flex flex-col items-center justify-center h-40 text-center text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 rounded-lg p-6 space-y-4">
+                            class="flex flex-col items-center justify-center h-40 text-center text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800  p-6 space-y-4">
                             <p class="text-lg font-semibold text-gray-700 dark:text-gray-300">
                                 Your cart is empty.
                             </p>
                             <Link :href="route('products.index')" title=""
-                                class="inline-flex items-center gap-2 text-primary-700 hover:text-primary-900 underline dark:text-primary-500 dark:hover:text-primary-300">
+                                class="inline-flex items-center gap-2 text-blue-700 hover:text-blue-900 underline dark:text-blue-500 dark:hover:text-blue-300">
                                 <span class="text-sm font-medium">Continue Shopping</span>
 
                                 <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
@@ -60,7 +63,7 @@ const remove = (product) => {
                         </div>
                         <div v-else class="space-y-6">
                             <div v-for="product in products" :key="product.id"
-                                class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
+                                class=" border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
                                 <div class="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
                                     <a :href="'/product/' + product.slug" class="shrink-0 md:order-1">
                                         <img :src="product.product_images.length > 0 ? `${product.product_images[0].image}` : 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg'"
@@ -71,7 +74,7 @@ const remove = (product) => {
                                         <div class="flex items-center">
                                             <button type="button"
                                                 @click.prevent="update(product, carts[itemId(product.id)].quantity - 1)"
-                                                class="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700">
+                                                class="inline-flex h-5 w-5 shrink-0 items-center justify-center  border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700">
                                                 <svg class="h-2.5 w-2.5 text-gray-900 dark:text-white"
                                                     aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                                                     viewBox="0 0 18 2">
@@ -84,7 +87,7 @@ const remove = (product) => {
                                                 class="w-auto max-w-16 shrink-0 border-0 bg-transparent text-center text-sm font-medium text-gray-900 focus:outline-none focus:ring-0 dark:text-white" />
                                             <button type="button"
                                                 @click.prevent="update(product, carts[itemId(product.id)].quantity + 1)"
-                                                class="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700">
+                                                class="inline-flex h-5 w-5 shrink-0 items-center justify-center  border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700">
                                                 <svg class="h-2.5 w-2.5 text-gray-900 dark:text-white"
                                                     aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                                                     viewBox="0 0 18 18">
@@ -136,15 +139,12 @@ const remove = (product) => {
                         </div>
                         <div class="hidden xl:mt-8 xl:block">
                             <h3 class="text-xl font-semibold text-gray-900 dark:text-white">People also bought</h3>
-                            <!---->
-<!--                            <div class="mt-6 grid grid-cols-3 gap-4 sm:mt-8">-->
-<!--                            <ProductCards grid-class="grid-cols-3" products="PeopleAlsoBought"/>-->
                             <PeopleAlsoBoughtProducts :products="PeopleAlsoBought"/>
                         </div>
                     </div>
                     <div class="mx-auto mt-6 max-w-4xl flex-1 space-y-6 lg:mt-0 lg:w-full">
                         <div
-                            class="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6">
+                            class="space-y-4 border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6">
                             <p class="text-xl font-semibold text-gray-900 dark:text-white">Order summary</p>
 
                             <div class="space-y-4">
@@ -173,14 +173,14 @@ const remove = (product) => {
                                     <dd class="text-base font-bold text-gray-900 dark:text-white">JOD {{ total }}</dd>
                                 </dl>
                             </div>
-                            <a href="#"
-                                class="flex w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Proceed
-                                to Checkout</a>
+                            <Link :href="route('checkout')"
+                                class="flex w-full items-center justify-center bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Proceed
+                                to Checkout</Link>
 
                             <div class="flex items-center justify-center gap-2">
                                 <span class="text-sm font-normal text-gray-500 dark:text-gray-400"> or </span>
                                 <Link :href="route('products.index')" title=""
-                                    class="inline-flex items-center gap-2 text-sm font-medium text-primary-700 underline hover:no-underline dark:text-primary-500">
+                                    class="inline-flex items-center gap-2 text-sm font-medium text-blue-700 underline hover:no-underline dark:text-blue-500">
                                     Continue Shopping
                                     <svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                         fill="none" viewBox="0 0 24 24">
