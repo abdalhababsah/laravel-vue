@@ -3,28 +3,24 @@
     <section id="brands_section" class=" md:mt-28 mt-12 bg-[#7d836d]">
         <div class="px-20 py-3">
             <div class="flex items-center justify-between gap-6 xl:gap-11 ">
-                <a href="/details.html">
-                    <img src="https://logos-world.net/wp-content/uploads/2023/09/Chanel-Logo.png" alt="graygrids"
-                        class="sm:w-14 w-10 md:w-28" />
-
-                </a>
-                <a href="https://lineicons.com/">
-                    <img src="https://logos-world.net/wp-content/uploads/2023/09/Coach-Logo.png" alt="lineicons"
-                        class="sm:w-14 w-10 md:w-28" />
-
-                </a>
-                <a href="https://ayroui.com/">
-                    <img src="https://n8i5q6b9.rocketcdn.me/wp-content/uploads/2022/08/ALLU_Logo_Black-e1660680879561-570x232-1.png"
-                        alt="ayroui" class="sm:w-14 w-10 md:w-28" />
-
-                </a>
-                <a href="https://tailgrids.com/">
-                    <img src="https://lappella.com/wp-content/uploads/2022/09/lappellalogo.png" alt="tailgrids"
-                        class="sm:w-14 w-10 md:w-28" />
-
-                </a>
+                <img :src="ChanelLogo" alt="Chanel Logo" class="sm:w-14 w-10 md:w-28" />
+                <img :src="CoachLogo" alt="Coach Logo" class="sm:w-14 w-10 md:w-28" />
+                <img :src="AlluLogo" alt="Allu Logo" class="sm:w-14 w-10 md:w-28" />
+                <img :src="LappellaLogo" alt="Lappella Logo" class="sm:w-14 w-10 md:w-28" />
             </div>
         </div>
     </section>
-
 </template>
+
+<script setup>
+import CoachLogo from '../../assets/coach.svg';
+import ChanelLogo from '../../assets/chanel-logo.svg';
+import LappellaLogo from '../../assets/prada.svg';
+import AlluLogo from '../../assets/gucci.svg';
+</script>
+<style scoped>
+       img {
+            width: 100px;
+            mix-blend-mode: multiply;
+        }
+</style>

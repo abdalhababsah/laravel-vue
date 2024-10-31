@@ -1,18 +1,25 @@
-<script setup>
-import { onMounted, ref } from "vue";
-import { initFlowbite } from "flowbite";
-import { router, usePage } from "@inertiajs/vue3";
-import Swal from "sweetalert2";
-import Pagination from "../Components/Pagination.vue";
+<!-- File: resources/js/Pages/Admin/Categories/CategoriesList.vue -->
 
+<script setup>
+import { onMounted, ref, watch } from "vue";
+import { initFlowbite } from "flowbite";
+import { router } from "@inertiajs/vue3";
+import Swal from "sweetalert2";
+import Pagination from '../Components/Pagination.vue';
+import debounce from 'lodash/debounce';
+
+// Define the props received from the parent component
+const props = defineProps({
+    categories: Object, // Paginated categories object
+    filters: Object,    // Current filters (e.g., search)
+});
+
+// Initialize Flowbite on component mount
 onMounted(() => {
     initFlowbite();
 });
 
-defineProps({
-    categories: Array
-});
-
+// Reactive variables for modal and form states
 const editMode = ref(false);
 const isAddCategory = ref(false);
 const dialogVisible = ref(false);
@@ -22,6 +29,22 @@ const id = ref("");
 const name = ref("");
 const slug = ref("");
 
+// Reactive search variable initialized from props.filters
+const search = ref(props.filters.search || "");
+
+// Debounced search function using lodash debounce
+const debouncedSearch = debounce((newSearch) => {
+    router.get(route('admin.categories.index'), { search: newSearch }, {
+        preserveState: true,
+        preserveScroll: true,
+    });
+}, 500);
+
+// Watch for changes in the search input and trigger debounced search
+watch(search, (newSearch) => {
+    debouncedSearch(newSearch);
+});
+
 // Reset form data
 const resetFormData = () => {
     id.value = '';
@@ -29,6 +52,7 @@ const resetFormData = () => {
     name.value = '';
 };
 
+// Add Category
 const AddCategory = async () => {
     const data = {
         name: name.value,
@@ -36,7 +60,7 @@ const AddCategory = async () => {
     };
 
     try {
-        await router.post("/admin/categories/store", data, {
+        await router.post(route('categories.store'), data, {
             onSuccess: (page) => {
                 Swal.fire({
                     toast: true,
@@ -48,6 +72,15 @@ const AddCategory = async () => {
                 });
                 dialogVisible.value = false;
                 resetFormData();
+            },
+            onError: (errors) => {
+                // Handle validation errors
+                Swal.fire({
+                    title: "Validation Error!",
+                    html: Object.values(errors).join('<br>'),
+                    icon: "error",
+                    confirmButtonText: "OK",
+                });
             }
         });
     } catch (error) {
@@ -61,11 +94,9 @@ const AddCategory = async () => {
     }
 };
 
-
 // Delete Category
 const deleteCategory = async (id) => {
     try {
-        console.log(id);
         const result = await Swal.fire({
             title: 'Are you sure?',
             text: "This action cannot be undone!",
@@ -77,13 +108,23 @@ const deleteCategory = async (id) => {
             cancelButtonText: 'Cancel',
         });
         if (result.isConfirmed) {
-            await router.delete(`/admin/categories/delete/${id}`, {
+            await router.delete(route('categories.delete', id), {
                 onSuccess: (page) => {
                     Swal.fire({
                         toast: true,
                         title: page.props.flash.success,
                         position: "top-end",
                         icon: "success",
+                        showConfirmButton: false,
+                        timer: 1500,
+                    });
+                },
+                onError: (error) => {
+                    Swal.fire({
+                        title: "Error!",
+                        text: "There was an error deleting the category: " + error.message,
+                        position: "top-end",
+                        icon: "error",
                         showConfirmButton: false,
                         timer: 1500,
                     });
@@ -108,6 +149,7 @@ const openAddModel = () => {
     isAddCategory.value = true;
     dialogVisible.value = true;
     editMode.value = false;
+    resetFormData();
 };
 
 // Open Edit Category modal
@@ -124,6 +166,7 @@ const openEditModel = (category) => {
 const handleClose = () => {
     isAddCategory.value = false;
     dialogVisible.value = false;
+    resetFormData();
 };
 
 // Update Category
@@ -134,7 +177,7 @@ const updateCategory = async () => {
         _method: 'PUT'
     };
     try {
-        await router.put(`/admin/categories/update/${id.value}`, data, {
+        await router.put(route('categories.update', id.value), data, {
             onSuccess: (page) => {
                 dialogVisible.value = false;
                 resetFormData();
@@ -145,6 +188,15 @@ const updateCategory = async () => {
                     icon: "success",
                     showConfirmButton: false,
                     timer: 1500,
+                });
+            },
+            onError: (errors) => {
+                // Handle validation errors
+                Swal.fire({
+                    title: "Validation Error!",
+                    html: Object.values(errors).join('<br>'),
+                    icon: "error",
+                    confirmButtonText: "OK",
                 });
             }
         });
@@ -158,74 +210,93 @@ const updateCategory = async () => {
         });
     }
 };
-
 </script>
-
 
 <template>
     <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5">
-        <!-- add category diaglog -->
+        <!-- Add/Edit Category Dialog -->
         <el-dialog v-model="dialogVisible" :title="editMode ? 'Edit Category' : 'Add Category'" width="50%"
             :before-close="handleClose">
-            <!-- add Category form -->
+            <!-- Add/Edit Category Form -->
             <form class="px-6 py-4" @submit.prevent="editMode ? updateCategory() : AddCategory()">
-                <!-- Category Title -->
+                <!-- Category Name -->
                 <div class="relative z-0 w-full mb-4">
-                    <label for="floating_title"
+                    <label for="floating_name"
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
                     <input type="text" v-model="name" name="floating_name" id="floating_name"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
+                        focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 
+                        dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 
+                        dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                         placeholder="Type Category name" required>
                 </div>
-                <!-- Category Slug
-        <div class="relative z-0 w-full mb-4">
-            <label for="floating_title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Slug <span class="text-red-600">(You can keep it empty and create by default)</span></label>
-            <input type="text" v-model="title" name="floating_title" id="floating_title"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                placeholder="Type Category Slug" >
-        </div> -->
-
+                <!-- Category Slug (Optional) -->
+                <div class="relative z-0 w-full mb-4">
+                    <label for="floating_slug"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        Slug <span class="text-red-600">(You can keep it empty and it will be generated automatically)</span>
+                    </label>
+                    <input type="text" v-model="slug" name="floating_slug" id="floating_slug"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
+                        focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 
+                        dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 
+                        dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        placeholder="Type Category Slug (optional)">
+                </div>
 
                 <!-- Submit Button -->
                 <div class="flex justify-end mt-6">
                     <button type="submit"
-                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5">
+                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 
+                        focus:outline-none focus:ring-blue-300 font-medium rounded-lg 
+                        text-sm px-5 py-2.5">
                         Submit
                     </button>
                 </div>
             </form>
         </el-dialog>
 
-        <!-- end add product diaglog -->
+        <!-- Main Content -->
         <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
-            <!-- Start coding here -->
+            <!-- Categories Management Panel -->
             <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
                 <div
                     class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
+                    
+                    <!-- Search Form -->
                     <div class="w-full md:w-1/2">
-                        <form class="flex items-center">
+                        <form @submit.prevent="">
                             <label for="simple-search" class="sr-only">Search</label>
                             <div class="relative w-full">
                                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                     <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400"
-                                        fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                         <path fill-rule="evenodd"
                                             d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
                                             clip-rule="evenodd" />
                                     </svg>
                                 </div>
                                 <input type="text" id="simple-search"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    v-model="search"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
+                                    focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2 
+                                    dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 
+                                    dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder="Search" />
                             </div>
                         </form>
                     </div>
+
+                    <!-- Add Category Button -->
                     <div
-                        class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+                        class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch 
+                        md:items-center justify-end md:space-x-3 flex-shrink-0">
                         <button type="button"
-                            class="flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                            class="flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 
+                            focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 
+                            dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
                             @click="openAddModel">
-                            <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20"
+                            <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewBox="0 0 20 20"
                                 xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                 <path clip-rule="evenodd" fill-rule="evenodd"
                                     d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
@@ -234,15 +305,16 @@ const updateCategory = async () => {
                         </button>
                     </div>
                 </div>
+
+                <!-- Categories Table -->
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
                                 <th scope="col" class="px-4 py-3">
-                                    Category name
+                                    Category Name
                                 </th>
                                 <th scope="col" class="px-4 py-3">Slug</th>
-
                                 <th scope="col" class="px-4 py-3">
                                     <span class="sr-only">Actions</span>
                                 </th>
@@ -257,53 +329,58 @@ const updateCategory = async () => {
                                     {{ category.name }}
                                 </th>
 
-
                                 <td class="px-4 py-3">
                                     {{ category.slug ? category.slug : "No slug" }}
                                 </td>
                                 <td class="px-4 py-3 flex items-center justify-end">
                                     <button :id="'edit-category-dropdown-button-' + category.id"
                                         :data-dropdown-toggle="'edit-category-dropdown-' + category.id"
-                                        class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
+                                        class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 
+                                        hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 
+                                        dark:hover:text-gray-100"
                                         type="button">
-                                        <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
+                                        <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
                                             xmlns="http://www.w3.org/2000/svg">
                                             <path
                                                 d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
                                         </svg>
                                     </button>
                                     <div :id="'edit-category-dropdown-' + category.id"
-                                        class="hidden z-10 w-24 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
+                                        class="hidden z-10 w-24 bg-white rounded divide-y divide-gray-100 shadow 
+                                        dark:bg-gray-700 dark:divide-gray-600">
                                         <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
                                             :aria-labelledby="'edit-category-dropdown-button-' + category.id">
                                             <li>
                                                 <a href="#"
-                                                    class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Show</a>
+                                                    class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 
+                                                    dark:hover:text-white">Show</a>
                                             </li>
                                             <li>
                                                 <button @click="openEditModel(category)"
-                                                    class="block py-2 px-4 text-left w-full hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</button>
+                                                    class="block py-2 px-4 text-left w-full hover:bg-gray-100 
+                                                    dark:hover:bg-gray-600 dark:hover:text-white">Edit</button>
                                             </li>
                                         </ul>
                                         <div class="py-1">
                                             <button @click="deleteCategory(category.id)"
-                                                class="block py-2 px-4 text-left w-full text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Delete</button>
+                                                class="block py-2 px-4 text-left w-full text-red-600 hover:bg-gray-100 
+                                                dark:hover:bg-gray-600 dark:hover:text-white">Delete</button>
                                         </div>
                                     </div>
                                 </td>
 
                             </tr>
                             <tr v-else>
-                                <td colspan="8" class="text-center py-4">
+                                <td colspan="3" class="text-center py-4">
                                     No categories available
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                <!-- pagination -->
-                <Pagination :pagination="categories" />
 
+                <!-- Pagination -->
+                <Pagination :pagination="categories" />
             </div>
         </div>
     </section>

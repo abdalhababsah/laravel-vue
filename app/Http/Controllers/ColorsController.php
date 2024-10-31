@@ -8,13 +8,28 @@ use Inertia\Inertia;
 
 class ColorsController extends Controller
 {
-    public function index()
-    {
-        $colors = Color::latest()->paginate(10);
-        return Inertia::render('Admin/Colors/Index', [
-        'colors' => $colors
-    ]);
+// File: app/Http/Controllers/ColorsController.php
+
+public function index(Request $request)
+{
+    // Initialize the query builder
+    $query = Color::query();
+
+    // Check if there's a search query
+    if ($search = $request->input('search')) {
+        $query->where('name', 'like', "%{$search}%")
+              ->orWhere('hex_code', 'like', "%{$search}%");
     }
+
+    // Fetch paginated results with search applied
+    $colors = $query->latest()->paginate(10)->withQueryString();
+
+    // Return the Inertia view with colors and current filters
+    return Inertia::render('Admin/Colors/Index', [
+        'colors' => $colors,
+        'filters' => $request->only('search'),
+    ]);
+}
     public function store(Request $request)
     {
         $request->validate([

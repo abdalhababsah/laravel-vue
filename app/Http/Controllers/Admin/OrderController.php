@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -11,18 +12,28 @@ use Inertia\Inertia;
 class OrderController extends Controller
 {
     public function index(Request $request)
-
-
     {
+        // Initialize the query builder
+        $query = Order::with(['user', 'userAddress', 'orderItems.product', 'payments']);
 
+        // Apply filters
+        if ($search = $request->input('search')) {
+            $query->where(function($q) use ($search) {
+                $q->where('id', 'like', "%{$search}%")
+                  ->orWhereHas('user', function($q) use ($search) {
+                      $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%");
+                  });
+            });
+        }
 
-        $orders = Order::with(['user', 'userAddress', 'orderItems.product', 'payments'])
-            ->filtered($request)
-            ->paginate(10);
-            // dd($orders);
+        // Fetch paginated results with search applied
+        $orders = $query->latest()->paginate(10)->withQueryString();
 
+        // Return the Inertia view with orders and current filters
         return Inertia::render('Admin/Orders/Index', [
             'orders' => $orders,
+            'filters' => $request->only('search'),
         ]);
     }
     public function show($id)

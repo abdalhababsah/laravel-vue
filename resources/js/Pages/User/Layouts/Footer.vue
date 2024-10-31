@@ -9,16 +9,10 @@
             </a>
             <ul class="flex flex-wrap items-center mb-6 gap-3 text-sm font-medium text-white sm:mb-0 dark:text-gray-400">
                 <li>
-                    <a href="#" class="hover:underline me-4 md:me-6">About</a>
+                    <Link :href="route('AboutUs')" class="hover:underline me-4 md:me-6">About</Link>
                 </li>
                 <li>
-                    <a href="#" class="hover:underline me-4 md:me-6">Privacy Policy</a>
-                </li>
-                <li>
-                    <a href="#" class="hover:underline me-4 md:me-6">Licensing</a>
-                </li>
-                <li>
-                    <a href="#" class="hover:underline">Contact</a>
+                    <Link :href="route('contactUs')" class="hover:underline">Contact</Link>
                 </li>
             </ul>
         </div>
@@ -28,3 +22,6 @@
     </div>
 </footer>
 </template>
+<script setup>
+import { Link } from '@inertiajs/vue3';
+</script>

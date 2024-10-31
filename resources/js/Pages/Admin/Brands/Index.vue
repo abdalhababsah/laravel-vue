@@ -1,15 +1,16 @@
 <script setup>
 import AdminLayout from "../Components/AdminLayout.vue";
 import BrandsList from "./BrandsList.vue";
-defineProps({
-    brands: Array,
-})
 
+// Define the props received from the backend
+const props = defineProps({
+    brands: Object, // Paginated brands object
+    filters: Object, // Current filters (e.g., search)
+});
 </script>
+
 <template>
     <AdminLayout>
-
-        <BrandsList :brands="brands" />
-
+        <BrandsList :brands="brands" :filters="filters" />
     </AdminLayout>
 </template>

@@ -1,5 +1,7 @@
 import './bootstrap';
 import '../css/app.css';
+import 'select2/dist/css/select2.min.css';
+import 'select2/dist/js/select2.min.js';
 import 'element-plus/dist/index.css'
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';

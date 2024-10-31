@@ -11,12 +11,25 @@ use Inertia\Inertia;
 class BrandsController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $brands = Brand::latest()->paginate(10);
-    return Inertia::render('Admin/Brands/Index', [
-        'brands' => $brands
-    ]);
+        // Initialize the query builder
+        $query = Brand::query();
+
+        // Check if there's a search query
+        if ($search = $request->input('search')) {
+            $query->where('name', 'like', "%{$search}%")
+                  ->orWhere('slug', 'like', "%{$search}%");
+        }
+
+        // Fetch paginated results with search applied
+        $brands = $query->latest()->paginate(10)->withQueryString();
+
+        // Return the Inertia view with brands and current filters
+        return Inertia::render('Admin/Brands/Index', [
+            'brands' => $brands,
+            'filters' => $request->only('search'),
+        ]);
     }
 
     public function create()
