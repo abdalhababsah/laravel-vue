@@ -1,0 +1,1 @@
+import{i as t}from"./index-DtmRX2y-.js";import r from"./Footer-BbtBkDTd.js";import a from"./Header-DNAAO7Km.js";import{j as s,c as m,f as e,E as n,m as c,o as i}from"./app-pnQk3UGz.js";const $={__name:"UserLayouts",setup(_){return s(()=>{t()}),(o,f)=>(i(),m(c,null,[e(a),n(o.$slots,"default"),e(r)],64))}};export{$ as default};
