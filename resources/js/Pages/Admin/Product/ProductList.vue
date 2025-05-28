@@ -5,8 +5,9 @@ import { router, usePage } from "@inertiajs/vue3";
 import Swal from "sweetalert2";
 import { ref } from "vue";
 import { descriptionProps } from "element-plus";
-import { Plus, Delete, CloseBold } from '@element-plus/icons-vue';
+import { Plus, Delete, CloseBold, Upload } from '@element-plus/icons-vue';
 import Pagination from "../Components/Pagination.vue";
+import { ElMessage } from "element-plus";
 
 onMounted(() => {
     initFlowbite();
@@ -21,6 +22,8 @@ const editMode = ref(false);
 const isAddProduct = ref(false);
 const dialogVisible = ref(false);
 const dialogImageUrl = ref('');
+const previewVisible = ref(false);
+const previewImage = ref('');
 // product data
 const id = ref("");
 const title = ref("");
@@ -37,14 +40,30 @@ const in_stock = ref("");
 // handle images upload
 const fileList = ref([])
 const handleFileChange = (file) => {
+    // Create URL for preview
+    if (file.raw) {
+        file.url = URL.createObjectURL(file.raw);
+    }
     productImages.value.push(file);
+    return true;
 }
 const handleRemove = (file) => {
-    console.log(file)
+    const index = productImages.value.findIndex(f => f.uid === file.uid);
+    if (index !== -1) {
+        productImages.value.splice(index, 1);
+        // Revoke the object URL to prevent memory leaks
+        if (file.url) {
+            URL.revokeObjectURL(file.url);
+        }
+    }
 }
 const handlePictureCardPreview = (file) => {
-    dialogImageUrl.value = file.url
-    dialogVisible.value = true
+    previewImage.value = file.url;
+    previewVisible.value = true;
+}
+const handlePreviewClose = () => {
+    previewVisible.value = false;
+    previewImage.value = '';
 }
 const resetFormData = () => {
     id.value = '';
@@ -52,7 +71,13 @@ const resetFormData = () => {
     price.value = '';
     quantity.value = '';
     description.value = '';
-    productImages.value = '';
+    productImages.value = [];
+    // Clean up any object URLs
+    productImages.value.forEach(file => {
+        if (file.url) {
+            URL.revokeObjectURL(file.url);
+        }
+    });
     product_images.value = '';
     published.value = '';
     category_id.value = '';
@@ -61,7 +86,6 @@ const resetFormData = () => {
     dialogImageUrl.value = '';
 };
 const AddProduct = async () => {
-    // console.log(description.value);
     const formData = new FormData();
     formData.append("title", title.value);
     formData.append("price", price.value);
@@ -70,9 +94,14 @@ const AddProduct = async () => {
     formData.append("brand_id", brand_id.value);
     formData.append("category_id", category_id.value);
 
-    for (const image of productImages.value) {
-        formData.append("product_images[]", image.raw);
+    if (productImages.value && productImages.value.length > 0) {
+        productImages.value.forEach(file => {
+            if (file.raw) {
+                formData.append("product_images[]", file.raw);
+            }
+        });
     }
+
     try {
         await router.post("/admin/products/store", formData, {
             onSuccess: (page) => {
@@ -86,6 +115,7 @@ const AddProduct = async () => {
                 });
                 dialogVisible.value = false;
                 resetFormData();
+                productImages.value = [];
             }
         });
     } catch (error) {
@@ -141,7 +171,6 @@ const openAddModel = () => {
     editMode.value = false;
 };
 const openEditModel = (product) => {
-
     isAddProduct.value = false;
     editMode.value = true;
     dialogVisible.value = true;
@@ -150,6 +179,19 @@ const openEditModel = (product) => {
     price.value = product.price;
     quantity.value = product.quantity;
     description.value = product.description;
+    // Reset product images
+    productImages.value = [];
+    if (product.product_images && product.product_images.length) {
+        // Convert existing images to the format expected by el-upload
+        product.product_images.forEach((img, index) => {
+            productImages.value.push({
+                name: `Existing Image ${index + 1}`,
+                url: img.image,
+                status: 'success',
+                uid: img.id
+            });
+        });
+    }
     product_images.value = product.product_images;
     published.value = product.published;
     category_id.value = product.category_id;
@@ -189,14 +231,20 @@ const updateProduct = async () => {
     formData.append("category_id", category_id.value);
     formData.append("_method", 'PUT');
 
-    for (const image of productImages.value) {
-        formData.append("product_images[]", image.raw);
+    if (productImages.value && productImages.value.length > 0) {
+        productImages.value.forEach(file => {
+            if (file.raw) {
+                formData.append("product_images[]", file.raw);
+            }
+        });
     }
+
     try {
         await router.post('/admin/products/update/' + id.value, formData, {
             onSuccess: (page) => {
                 dialogVisible.value = false;
                 resetFormData();
+                productImages.value = [];
                 Swal.fire({
                     toast: true,
                     title: page.props.flash.success,
@@ -208,7 +256,13 @@ const updateProduct = async () => {
             }
         })
     } catch (error) {
-
+        Swal.fire({
+            title: "Error!",
+            text: "There was an error updating the product",
+            icon: "error",
+            confirmButtonText: "OK",
+            timer: 1500,
+        });
     }
 }
 </script>
@@ -286,18 +340,36 @@ const updateProduct = async () => {
                 <div class="relative z-0 w-full mb-4">
                     <label for="" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product
                         Images</label>
-                    <el-upload v-model:file-list="productImages" list-type="picture-card" multiple
-                        :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :on-change="handleFileChange">
+                    <el-upload v-model:file-list="productImages" 
+                        list-type="picture-card" 
+                        multiple
+                        :auto-upload="false"
+                        :limit="10"
+                        accept="image/*"
+                        :on-preview="handlePictureCardPreview" 
+                        :on-remove="handleRemove" 
+                        :on-change="handleFileChange"
+                        :on-exceed="(files) => {
+                            ElMessage.warning('You can upload up to 10 images')
+                        }">
                         <el-icon>
                             <Plus />
                         </el-icon>
+                        <template #tip>
+                            <div class="text-sm text-gray-500 mt-1">
+                                Accept all image formats. Max 10 images.
+                            </div>
+                        </template>
                     </el-upload>
+                    <el-dialog v-model="previewVisible" append-to-body>
+                        <img w-full :src="previewImage" alt="Preview" class="w-full" />
+                    </el-dialog>
                 </div>
 
                 <!-- Existing Product Images -->
                 <div class="flex justify-center flex-wrap mb-4 gap-3">
                     <div v-for="(product_image, index) in product_images" :key="product_image.id" class="relative">
-                        <img class="w-32 h-32 rounded" :src="`${product_image.image}`"
+                        <img class="w-32 h-32 rounded object-cover" :src="`${product_image.image}`"
                             alt="">
                         <span @click="deleteImage(product_image, index)"
                             class="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-red-600 border-2 border-white dark:border-gray-800 rounded-full flex items-center justify-center cursor-pointer">

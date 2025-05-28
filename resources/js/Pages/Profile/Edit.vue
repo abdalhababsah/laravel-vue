@@ -29,11 +29,11 @@ defineProps({
                     <div class="p-6 sm:p-8 border-b border-gray-200">
                         <h3 class="text-lg font-semibold text-gray-900 mb-1">Profile Information</h3>
                         <p class="text-sm text-gray-600 mb-6">Manage your account details and preferences.</p>
-                        <UpdateProfileInformationForm
-                            :must-verify-email="mustVerifyEmail"
-                            :status="status"
-                            class="max-w-xl"
-                        />
+                    <UpdateProfileInformationForm
+                        :must-verify-email="mustVerifyEmail"
+                        :status="status"
+                        class="max-w-xl"
+                    />
                     </div>
                 </div>
 
@@ -41,7 +41,7 @@ defineProps({
                     <div class="p-6 sm:p-8 border-b border-gray-200">
                         <h3 class="text-lg font-semibold text-gray-900 mb-1">Security</h3>
                         <p class="text-sm text-gray-600 mb-6">Ensure your account stays secure.</p>
-                        <UpdatePasswordForm class="max-w-xl" />
+                    <UpdatePasswordForm class="max-w-xl" />
                     </div>
                 </div>
 
@@ -49,7 +49,7 @@ defineProps({
                     <div class="p-6 sm:p-8 border-b border-gray-200">
                         <h3 class="text-lg font-semibold text-gray-900 mb-1">Delete Account</h3>
                         <p class="text-sm text-gray-600 mb-6">Permanently remove your account and all associated data.</p>
-                        <DeleteUserForm class="max-w-xl" />
+                    <DeleteUserForm class="max-w-xl" />
                     </div>
                 </div>
             </div>

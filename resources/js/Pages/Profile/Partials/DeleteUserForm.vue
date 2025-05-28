@@ -47,11 +47,11 @@ const closeModal = () => {
                     </svg>
                 </div>
                 <div>
-                    <h2 class="text-lg font-medium text-gray-900">Delete Account</h2>
-                    <p class="mt-1 text-sm text-gray-600">
+            <h2 class="text-lg font-medium text-gray-900">Delete Account</h2>
+            <p class="mt-1 text-sm text-gray-600">
                         Once your account is deleted, all of its resources and data will be permanently deleted. Before
                         deleting your account, please download any data or information that you wish to retain.
-                    </p>
+            </p>
                 </div>
             </div>
 
@@ -65,8 +65,8 @@ const closeModal = () => {
                 Delete Account
             </button>
 
-            <Modal :show="confirmingUserDeletion" @close="closeModal">
-                <div class="p-6">
+        <Modal :show="confirmingUserDeletion" @close="closeModal">
+            <div class="p-6">
                     <div class="mb-6">
                         <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -75,25 +75,25 @@ const closeModal = () => {
                         </div>
                         <h2 class="mt-4 text-center text-lg font-medium text-gray-900">
                             Are you absolutely sure?
-                        </h2>
+                </h2>
                         <p class="mt-2 text-center text-sm text-gray-600">
                             This action cannot be undone. Please enter your password to confirm you would like to permanently delete your account.
-                        </p>
+                </p>
                     </div>
 
-                    <div class="mt-6">
-                        <InputLabel for="password" value="Password" class="sr-only" />
-                        <TextInput
-                            id="password"
-                            ref="passwordInput"
-                            v-model="form.password"
-                            type="password"
+                <div class="mt-6">
+                    <InputLabel for="password" value="Password" class="sr-only" />
+                    <TextInput
+                        id="password"
+                        ref="passwordInput"
+                        v-model="form.password"
+                        type="password"
                             class="mt-1 block w-full rounded-lg"
                             placeholder="Enter your password"
-                            @keyup.enter="deleteUser"
-                        />
-                        <InputError :message="form.errors.password" class="mt-2" />
-                    </div>
+                        @keyup.enter="deleteUser"
+                    />
+                    <InputError :message="form.errors.password" class="mt-2" />
+                </div>
 
                     <div class="mt-6 flex justify-end gap-3">
                         <button
@@ -106,15 +106,15 @@ const closeModal = () => {
                         <button
                             type="button"
                             class="inline-flex items-center justify-center rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition duration-150 hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                            :class="{ 'opacity-25': form.processing }"
-                            :disabled="form.processing"
-                            @click="deleteUser"
-                        >
+                        :class="{ 'opacity-25': form.processing }"
+                        :disabled="form.processing"
+                        @click="deleteUser"
+                    >
                             Confirm Delete
                         </button>
                     </div>
                 </div>
             </Modal>
-        </div>
+            </div>
     </section>
 </template>
