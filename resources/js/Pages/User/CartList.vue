@@ -4,196 +4,136 @@ import UserLayouts from './Layouts/UserLayouts.vue';
 import PeopleAlsoBoughtProducts from "./Components/PeopleAlsoBoughtProducts.vue";
 import { Link, router, usePage } from "@inertiajs/vue3";
 import StepNavigation from './Components/checkout/StepNavigation.vue';
+import OrderSummary from './Components/shared/OrderSummary.vue';
 const carts = computed(() => usePage().props.cart.data.items);
 const total = computed(() => usePage().props.cart.data.total);
 const products = computed(() => usePage().props.cart.data.products);
 const PeopleAlsoBought = computed(() => usePage().props.PeopleAlsoBought.data);
 const itemId = (id) => carts.value.findIndex((item) => item.product_id === id);
 const update = (product, quantity) => {
+    if (quantity < 0) return;
     router.patch(route('cart.update', product.id), { quantity }, {
-        preserveState : true,
-                replace       : true,
-                preserveScroll: true,
-    })
-        .then(response => {
-            console.log('Cart updated successfully', response);
-        })
-        .catch(error => {
-            console.error('Error updating cart:', error);
-        });
+        preserveState: true,
+        replace: true,
+        preserveScroll: true,
+    });
 };
 const remove = (product) => {
     router.delete(route('cart.delete', product), {
-        preserveState : true,
-                replace       : true,
-                preserveScroll: true,
+        preserveState: true,
+        replace: true,
+        preserveScroll: true,
     });
-
-}
+};
 </script>
 <template>
     <UserLayouts>
-        <section class="bg-white lg:mx-36 antialiased lg:mt-2 dark:bg-gray-900 md:py-14 sm:py-8 lg:py-14">
-            <div class="mx-auto max-w-screen-xl px-4 2xl:px-0">
-                <StepNavigation
-                    :disableCart="false"
-                    :disableCheckout="true"
-                    :disableOrderSummary="true"
-                />
-                <h2 class="text-base mt-8  font-semibold text-gray-900 dark:text-white sm:text-xl">Shopping Cart</h2>
-                <div class="mt-6 sm:mt-8 md:gap-6 lg:flex lg:items-start xl:gap-8">
-                    <div class="mx-auto w-full flex-none lg:max-w-2xl xl:max-w-4xl">
-                        <div v-if="products.length === 0"
-                            class="flex flex-col items-center justify-center h-40 text-center text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800  p-6 space-y-4">
-                            <p class="text-lg font-semibold text-gray-700 dark:text-gray-300">
-                                Your cart is empty.
-                            </p>
-                            <Link :href="route('products.index')" title=""
-                                class="inline-flex items-center gap-2 text-blue-700 hover:text-blue-900 underline dark:text-blue-500 dark:hover:text-blue-300">
-                                <span class="text-sm font-medium">Continue Shopping</span>
+        <div class="min-h-screen bg-gray-50 py-12">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between">
+                    <h1 class="text-3xl font-bold tracking-tight text-gray-900">Shopping Cart</h1>
+                    <Link :href="route('products.index')" class="text-sm font-medium text-[#7d836d] hover:text-[#b0956e]">
+                        Continue Shopping
+                        <span aria-hidden="true"> →</span>
+                    </Link>
+                </div>
 
-                                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                                    viewBox="0 0 24 24">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M9 10V6a3 3 0 0 1 3-3v0a3 3 0 0 1 3 3v4m3-2 .917 11.923A1 1 0 0 1 17.92 21H6.08a1 1 0 0 1-.997-1.077L6 8h12Z" />
-                                </svg>
-                            </Link>
+                <div class="mt-8">
+                    <div v-if="products.length === 0" class="flex flex-col items-center justify-center space-y-6 rounded-lg bg-white p-12 text-center shadow">
+                        <div class="rounded-full bg-gray-100 p-6">
+                            <svg class="h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                            </svg>
                         </div>
-                        <div v-else class="space-y-6">
-                            <div v-for="product in products" :key="product.id"
-                                class=" border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
-                                <div class="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
-                                    <a :href="'/product/' + product.slug" class="shrink-0 md:order-1">
-                                        <img :src="product.product_images.length > 0 ? `${product.product_images[0].image}` : 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg'"
-                                            :alt="product.title" class=" w-20 overflow-hidden" />
-                                    </a>
-                                    <label for="counter-input" class="sr-only">Choose quantity:</label>
-                                    <div class="flex items-center justify-between md:order-3 md:justify-end">
-                                        <div class="flex items-center">
-                                            <button type="button"
-                                                @click.prevent="update(product, carts[itemId(product.id)].quantity - 1)"
-                                                class="inline-flex h-5 w-5 shrink-0 items-center justify-center  border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700">
-                                                <svg class="h-2.5 w-2.5 text-gray-900 dark:text-white"
-                                                    aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                    viewBox="0 0 18 2">
-                                                    <path stroke="currentColor" stroke-linecap="round"
-                                                        stroke-linejoin="round" stroke-width="2" d="M1 1h16" />
-                                                </svg>
-                                            </button>
-                                            <input v-model="carts[itemId(product.id)].quantity" type="number" min="0"
-                                                readonly
-                                                class="w-auto max-w-16 shrink-0 border-0 bg-transparent text-center text-sm font-medium text-gray-900 focus:outline-none focus:ring-0 dark:text-white" />
-                                            <button type="button"
-                                                @click.prevent="update(product, carts[itemId(product.id)].quantity + 1)"
-                                                class="inline-flex h-5 w-5 shrink-0 items-center justify-center  border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700">
-                                                <svg class="h-2.5 w-2.5 text-gray-900 dark:text-white"
-                                                    aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                    viewBox="0 0 18 18">
-                                                    <path stroke="currentColor" stroke-linecap="round"
-                                                        stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16" />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                        <div class="text-end md:order-4 md:w-32">
-                                            <p class="text-base font-bold text-gray-900 dark:text-white">${{
-                                                product.price }}</p>
-                                        </div>
-                                    </div>
-                                    <div class="w-full min-w-0 flex-1 space-y-4 md:order-2 md:max-w-md">
-                                        <a :href="'/product/' + product.slug"
-                                            class="text-base font-medium text-gray-900 hover:underline dark:text-white">
-                                            {{ product.title }}
-                                        </a>
-
-                                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ product.description }}
-                                        </p>
-                                        <div class="flex items-center gap-4">
-                                            <!-- <button type="button"
-                                                class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-900 hover:underline dark:text-gray-400 dark:hover:text-white">
-                                                <svg class="me-1.5 h-5 w-5" aria-hidden="true"
-                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    fill="none" viewBox="0 0 24 24">
-                                                    <path stroke="currentColor" stroke-linecap="round"
-                                                        stroke-linejoin="round" stroke-width="2"
-                                                        d="M12.01 6.001C6.5 1 1 8 5.782 13.001L12.011 20l6.23-7C23 8 17.5 1 12.01 6.002Z" />
-                                                </svg>
-                                                Add to Favorites
-                                            </button> -->
-                                            <button type="button" @click.prevent="remove(product)"
-                                                class="inline-flex items-center text-sm font-medium text-red-600 hover:underline dark:text-red-500">
-                                                <svg class="me-1.5 h-5 w-5" aria-hidden="true"
-                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    fill="none" viewBox="0 0 24 24">
-                                                    <path stroke="currentColor" stroke-linecap="round"
-                                                        stroke-linejoin="round" stroke-width="2"
-                                                        d="M6 18 17.94 6M18 18 6.06 6" />
-                                                </svg>
-                                                Remove
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div>
+                            <h2 class="text-xl font-medium text-gray-900">Your cart is empty</h2>
+                            <p class="mt-2 text-sm text-gray-500">Looks like you haven't added anything to your cart yet.</p>
                         </div>
-                        <div class="hidden xl:mt-8 xl:block">
-                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white">People also bought</h3>
-                            <PeopleAlsoBoughtProducts :products="PeopleAlsoBought"/>
-                        </div>
+                        <Link :href="route('products.index')" class="inline-flex items-center justify-center rounded-md border border-transparent bg-[#7d836d] px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-[#b0956e]">
+                            Start Shopping
+                        </Link>
                     </div>
-                    <div class="mx-auto mt-6 max-w-4xl flex-1 space-y-6 lg:mt-0 lg:w-full">
-                        <div
-                            class="space-y-4 border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6">
-                            <p class="text-xl font-semibold text-gray-900 dark:text-white">Order summary</p>
 
+                    <div v-else class="lg:grid lg:grid-cols-12 lg:items-start lg:gap-8">
+                        <div class="lg:col-span-8">
                             <div class="space-y-4">
-                                <div class="space-y-2">
-                                    <dl class="flex items-center justify-between gap-4">
-                                        <dt class="text-base font-normal text-gray-500 dark:text-gray-400">Original
-                                            price</dt>
-                                        <dd class="text-base font-medium text-gray-900 dark:text-white">JOD {{ total }}
-                                        </dd>
-                                    </dl>
-                                    <dl class="flex items-center justify-between gap-4">
-                                        <dt class="text-base font-normal text-gray-500 dark:text-gray-400">Store Pickup
-                                        </dt>
-                                        <dd class="text-base font-medium text-gray-900 dark:text-white">JOD 0.00</dd>
-                                    </dl>
+                                <div v-for="product in products" :key="product.id" class="group relative flex rounded-lg bg-white p-6 shadow transition-all hover:shadow-lg">
+                                    <div class="flex flex-1 items-center">
+                                        <div class="flex h-24 w-24 flex-shrink-0 items-center justify-center overflow-hidden rounded-md border border-gray-200">
+                                            <img :src="product.product_images.length > 0 ? `${product.product_images[0].image}` : 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg'"
+                                                :alt="product.title" class="h-full w-full object-cover object-center" />
+                                        </div>
 
-                                    <dl class="flex items-center justify-between gap-4">
-                                        <dt class="text-base font-normal text-gray-500 dark:text-gray-400">Tax</dt>
-                                        <dd class="text-base font-medium text-gray-900 dark:text-white">JOD 0.00</dd>
-                                    </dl>
+                                        <div class="ml-6 flex flex-1 flex-col">
+                                            <div class="flex justify-between">
+                                                <div>
+                                                    <h3 class="text-lg font-medium text-gray-900">
+                                                        <a :href="'/product/' + product.slug">{{ product.title }}</a>
+                                                    </h3>
+                                                    <p class="mt-1 text-sm text-gray-500 line-clamp-2">{{ product.description }}</p>
+                                                </div>
+                                                <p class="text-lg font-medium text-gray-900">JOD {{ product.price }}</p>
+                                            </div>
+
+                                            <div class="mt-4 flex items-center justify-between">
+                                                <div class="flex items-center space-x-4">
+                                                    <div class="flex items-center rounded-lg border border-gray-200">
+                                                        <button @click.prevent="update(product, carts[itemId(product.id)].quantity - 1)"
+                                                            class="flex h-8 w-8 items-center justify-center border-r border-gray-200 hover:bg-gray-50">
+                                                            <span class="sr-only">Decrease quantity</span>
+                                                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                                                            </svg>
+                                                        </button>
+                                                        <input v-model="carts[itemId(product.id)].quantity" type="number" min="0" readonly
+                                                            class="w-12 border-none bg-transparent p-0 text-center text-sm focus:ring-0" />
+                                                        <button @click.prevent="update(product, carts[itemId(product.id)].quantity + 1)"
+                                                            class="flex h-8 w-8 items-center justify-center border-l border-gray-200 hover:bg-gray-50">
+                                                            <span class="sr-only">Increase quantity</span>
+                                                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                                            </svg>
+                                                        </button>
+                                                    </div>
+                                                    <button @click.prevent="remove(product)" class="text-sm font-medium text-[#7d836d] hover:text-[#b0956e]">
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-
-                                <dl
-                                    class="flex items-center justify-between gap-4 border-t border-gray-200 pt-2 dark:border-gray-700">
-                                    <dt class="text-base font-bold text-gray-900 dark:text-white">Total</dt>
-                                    <dd class="text-base font-bold text-gray-900 dark:text-white">JOD {{ total }}</dd>
-                                </dl>
                             </div>
-                            <Link :href="route('checkout')"
-                                class="flex w-full items-center justify-center bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Proceed
-                                to Checkout</Link>
+                        </div>
 
-                            <div class="flex items-center justify-center gap-2">
-                                <span class="text-sm font-normal text-gray-500 dark:text-gray-400"> or </span>
-                                <Link :href="route('products.index')" title=""
-                                    class="inline-flex items-center gap-2 text-sm font-medium text-blue-700 underline hover:no-underline dark:text-blue-500">
-                                    Continue Shopping
-                                    <svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                        fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                            stroke-width="2" d="M19 12H5m14 0-4 4m4-4-4-4" />
-                                    </svg>
-                                </Link>
-                            </div>
+                        <div class="mt-8 lg:col-span-4 lg:mt-0">
+                            <OrderSummary :isCheckoutPage="false" />
                         </div>
                     </div>
                 </div>
+
+                <section v-if="products.length > 0" class="mt-16">
+                    <div class="sm:flex sm:items-center sm:justify-between">
+                        <h2 class="text-2xl font-bold tracking-tight text-gray-900">People Also Bought</h2>
+                        <Link :href="route('products.index')" class="hidden text-sm font-medium text-[#7d836d] hover:text-[#b0956e] sm:block">
+                            View all products
+                            <span aria-hidden="true"> →</span>
+                        </Link>
+                    </div>
+
+                    <div class="mt-8">
+                        <PeopleAlsoBoughtProducts :products="PeopleAlsoBought" />
+                    </div>
+
+                    <div class="mt-6 sm:hidden">
+                        <Link :href="route('products.index')" class="block text-sm font-medium text-[#7d836d] hover:text-[#b0956e]">
+                            View all products
+                            <span aria-hidden="true"> →</span>
+                        </Link>
+                    </div>
+                </section>
             </div>
-        </section>
+        </div>
     </UserLayouts>
 
 </template>
