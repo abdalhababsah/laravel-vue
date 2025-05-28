@@ -12,6 +12,7 @@ class CartItem extends Model
         'user_id',
         'product_id',
         'quantity',
+        'product_color_id',
     ];
 
     public function user()
@@ -22,5 +23,10 @@ class CartItem extends Model
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function productColor()
+    {
+        return $this->belongsTo(ProductColor::class);
     }
 }

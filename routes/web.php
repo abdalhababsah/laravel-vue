@@ -110,3 +110,7 @@ Route::middleware(['auth','admin'])->prefix('admin')->group(function(){
 
 
 require __DIR__.'/auth.php';
+
+Route::middleware(['auth'])->group(function () {
+    Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
+});

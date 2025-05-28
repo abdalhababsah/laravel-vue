@@ -16,7 +16,7 @@ class Order extends Model
         'session_id',
         'user_address_id',
         'created_by',
-
+        'user_id',
         'updated_by',
     ];
 

@@ -108,11 +108,28 @@ class Cart
     }
     public static function getProductsAndCartItems()
     {
-        $cartItems = self::getCartItems();
+        if ($user = Auth::user()) {
+            $cartItems = CartItem::where('user_id', $user->id)
+                ->with('productColor')
+                ->get()
+                ->map(fn($item) => [
+                    'product_id' => $item->product_id,
+                    'quantity' => $item->quantity,
+                    'product_color_id' => $item->product_color_id ?? 1 // Default to first color if none selected
+                ])
+                ->toArray();
+        } else {
+            $cartItems = self::getCookieCartItems();
+            // Add default color for cookie items
+            $cartItems = array_map(function($item) {
+                $item['product_color_id'] = $item['product_color_id'] ?? 1; // Default to first color if none selected
+                return $item;
+            }, $cartItems);
+        }
+
         $ids = Arr::pluck($cartItems, 'product_id');
         $products = Product::whereIn('id', $ids)->with('product_images')->get();
-        // dd($products, $cartItems);
-        $cartItems = Arr::keyBy($cartItems, 'product_id');
+        $cartItems = collect($cartItems)->keyBy('product_id')->toArray();
 
         return [$products, $cartItems];
     }
