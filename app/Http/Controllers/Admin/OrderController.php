@@ -60,22 +60,26 @@ class OrderController extends Controller
     {
         $order = Order::with([
             'user',
-            'orderItems:order_id,product_id,product_color_id,quantity,unit_price',
-            'orderItems.product:id,title,price', // Make sure to include the product price
-            'orderItems.product.product_images:id,product_id,image',
-            'orderItems.productColor.color',
-            'payments',
-            'userAddress'
-        ])
-        ->findOrFail($id);
+            'orderItems.product',
+            'userAddress',
+            'payments'
+        ])->findOrFail($id);
 
         $order->created_at_formatted = $order->created_at->format('jS F Y \a\t h:i A');
-        $order->subtotal = $order->orderItems->sum(fn($item) => $item->quantity * $item->product->price); // Use product price
-        $order->tax = $order->subtotal * 0.1; // Assuming 10% tax rate
+        $order->subtotal = $order->orderItems->sum(fn($item) => $item->quantity * $item->product->price);
+        $order->tax = $order->subtotal * 0.1; // 10% tax rate
         $order->total_price = $order->subtotal + $order->tax - ($order->subtotal * $order->discount_percentage / 100);
 
-        $pdf = Pdf::loadView('invoices.Invoice', ['order' => $order]);
+        // Set default values for address if not available
+        $order->address = $order->userAddress ?? (object)[
+            'street_address' => 'N/A',
+            'city' => 'N/A',
+            'state' => 'N/A',
+            'postal_code' => 'N/A',
+            'country' => 'N/A'
+        ];
 
+        $pdf = Pdf::loadView('invoices.Invoice', ['order' => $order]);
         return $pdf->stream('invoice-' . $id . '.pdf');
     }
 
