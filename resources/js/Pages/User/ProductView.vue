@@ -64,7 +64,7 @@ const Checkout=()=>{
 
 <template>
   <UserLayouts>
-    <div class="bg-white py-6 sm:py-8 lg:py-12">
+    <div class="min-h-screen bg-white py-6 sm:py-8 lg:py-12">
       <div class="mx-auto max-w-screen-xl px-4 md:px-8">
         <div class="grid gap-8 md:grid-cols-2">
           <!-- images - start -->
