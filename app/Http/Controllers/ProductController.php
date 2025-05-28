@@ -20,7 +20,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with(['category', 'brand', 'product_images'])->get();
+        $products = Product::with(['category', 'brand', 'product_images'])->paginate(10);
         $brands = Brand::get();
         $categories = Category::get();
 

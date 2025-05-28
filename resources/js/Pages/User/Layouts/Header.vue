@@ -55,13 +55,12 @@ const handleLogout = () => {
                         </Link>
                     </li>
                     <li v-if="auth.user" class="flex gap-2">
-                        <a v-if="auth.user.isAdmin"
-                        href="admin/dashboard" class="px-6 py-3 mb-4 md:bg-[#b0956e] md:text-white bg-white text-[#06402b] transition duration-300 hover:bg-[#937c5b] hover:text-white">
+                        <Link v-if="auth.user.isAdmin" :href="route('admin.dashboard')" class="px-6 py-3 mb-4 md:bg-[#b0956e] md:text-white bg-white text-[#06402b] transition duration-300 hover:bg-[#937c5b] hover:text-white">
                             Dashboard
-                        </a>
-                        <a v-else  class="px-6 py-3 mb-4 md:bg-[#b0956e] md:text-white bg-white text-[#06402b] transition duration-300 hover:bg-[#937c5b] hover:text-white" href="user/dashboard">
+                        </Link>
+                        <Link v-else :href="route('user.dashboard')" class="px-6 py-3 mb-4 md:bg-[#b0956e] md:text-white bg-white text-[#06402b] transition duration-300 hover:bg-[#937c5b] hover:text-white">
                             Dashboard
-                        </a>
+                        </Link>
                         <Link :href="route('logout')" method="post" class="px-6 py-3 mb-4 md:bg-[#7d836d] md:text-white bg-white text-[#06402b] transition duration-300 hover:bg-[#937c5b] hover:text-white">
                             Logout
                         </Link>
@@ -103,13 +102,12 @@ const handleLogout = () => {
             <!-- User and Cart Actions -->
             <div v-if="canLogin" class="hidden md:flex items-center space-x-3 rtl:space-x-reverse">
                 <div v-if="auth.user" class="flex gap-2">
-                    <a v-if="auth.user.isAdmin" href="admin/dashboard" class="px-6 py-3 mb-4 md:bg-[#b0956e] md:text-white bg-white text-[#06402b] transition duration-300 hover:bg-[#937c5b] hover:text-white">
+                    <Link v-if="auth.user.isAdmin" :href="route('admin.dashboard')" class="px-6 py-3 mb-4 md:bg-[#b0956e] md:text-white bg-white text-[#06402b] transition duration-300 hover:bg-[#937c5b] hover:text-white">
                         Dashboard
-                    </a>
-
-                    <a v-else  class="px-6 py-3 mb-4 md:bg-[#b0956e] md:text-white bg-white text-[#06402b] transition duration-300 hover:bg-[#937c5b] hover:text-white" href="user/dashboard">
+                    </Link>
+                    <Link v-else :href="route('user.dashboard')" class="px-6 py-3 mb-4 md:bg-[#b0956e] md:text-white bg-white text-[#06402b] transition duration-300 hover:bg-[#937c5b] hover:text-white">
                         Dashboard
-                    </a>
+                    </Link>
                     <Link :href="route('logout')" method="post" class="px-6 py-3 mb-4 md:bg-[#7d836d] md:text-white bg-white text-[#06402b] transition duration-300 hover:bg-[#937c5b] hover:text-white">
                         Logout
                     </Link>

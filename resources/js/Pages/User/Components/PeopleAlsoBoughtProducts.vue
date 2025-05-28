@@ -48,7 +48,7 @@ const addToCart = async (product) => {
 
 <template>
 
-        <div class="mt-6 grid grid-cols-3 gap-4 sm:mt-8">
+        <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4 sm:mt-8">
             <div v-for="product in products" :key="product.id"
                  class="group product_card flex w-full max-w-xs flex-col overflow-hidden border bg-white">
                 <a :href="product.href" class="relative flex h-72 overflow-hidden">
@@ -115,6 +115,8 @@ const addToCart = async (product) => {
 
 <style scoped>
 .product_card{
-    width: 251px;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
 }
 </style>

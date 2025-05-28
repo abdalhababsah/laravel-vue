@@ -20,7 +20,7 @@ class CartController extends Controller
         if ($user) {
             $cartItems = CartItem::where('user_id', $user->id)->get();
             $userAddress = UserAddress::where('user_id', $user->id)->where('isMain', 1)->first();
-            $PeopleAlsoBought = Product::with(['product_images', 'brand', 'colors'])->inRandomOrder()->limit(3)->get();
+            $PeopleAlsoBought = Product::with(['product_images', 'brand', 'colors'])->inRandomOrder()->limit(4)->get();
 
             return Inertia::render(
                     'User/CartList',
